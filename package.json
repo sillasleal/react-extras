@@ -1,0 +1,37 @@
+{
+    "name": "@ssl-lib/react-extras",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",
+    "license": "MIT",
+    "files": [
+        "./dist/*.js"
+    ],
+    "scripts": {
+        "preinstall": "node -e \"const fs = require('fs');if(fs.existsSync('./package-lock.json')){fs.unlinkSync('./package-lock.json');}\"",
+        "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
+        "build": "babel ./src --out-dir ./dist",
+        "dev": "nodemon --exec npm run build",
+        "prepublish": "npm run test && npm run build",
+        "deploy": "npm publish --access=public"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "dist/*"
+        ]
+    },
+    "dependencies": {
+        "@ssl-lib/js-extras": "1"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.2.3",
+        "@babel/core": "^7.3.4",
+        "@babel/plugin-proposal-class-properties": "^7.3.4",
+        "@babel/plugin-transform-classes": "^7.3.4",
+        "@babel/preset-env": "^7.3.4",
+        "@babel/preset-react": "^7.0.0",
+        "fs-extra": "^7.0.1",
+        "nodemon": "^1.18.10"
+    }
+}
