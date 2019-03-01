@@ -24,10 +24,10 @@
 
 import {IfComponent, If, ElseIf, Else} from './IfComponent';
 import For from './For';
-import {TranslateProvider, Translate, t, setLang} from './Translate';
+import {TranslateProvider, Translate, SetLang} from './Translate';
 /**/
 export {
     IfComponent, If, ElseIf, Else,
     For,
-    TranslateProvider, Translate, t, setLang
+    TranslateProvider, Translate, SetLang
 };

@@ -125,7 +125,7 @@ var t = function t(key) {
       return key[0];
     }
 
-    var keyWord = params[key[2]] === 1 ? key[1] : key[0];
+    var keyWord = params[key[2]] === 1 ? key[0] : key[1];
     /**/
 
     return t(keyWord, params, personalDict, personalLang);
@@ -155,8 +155,17 @@ function (_Component) {
   _createClass(TranslateProvider, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      setLang(this.props.language, this.forceUpdate());
-      this.setDictionary(this.dictionary);
+      var _this = this;
+
+      setLang(this.props.language, function () {
+        return _this.forceUpdate();
+      });
+      this.setDictionary(this.props.dictionary);
+    }
+  }, {
+    key: "shouldComponentUpdate",
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return false;
     }
   }, {
     key: "setDictionary",
@@ -192,9 +201,9 @@ function (_Component2) {
   _createClass(Translate, [{
     key: "render",
     value: function render() {
-      if (typeof children === 'function') {
+      if (typeof this.props.children === 'function') {
         var _this$props = this.props,
-            _children = _this$props.children,
+            children = _this$props.children,
             params = _this$props.params,
             dictionary = _this$props.dictionary,
             lang = _this$props.lang;
@@ -205,9 +214,9 @@ function (_Component2) {
         /**/
 
 
-        return _children(translate, "".concat(_dictionary.language));
+        return children(translate, "".concat(_dictionary.language));
       } else {
-        return t(this.props.children, this.prop.params);
+        return t(this.props.children, this.props.params);
       }
     }
   }]);
