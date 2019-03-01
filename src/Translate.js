@@ -142,7 +142,7 @@ export class Translate extends Component {
             /**/
             return children(translate, `${_dictionary.language}`);
         } else {
-            return t(this.props.children, this.prop.params);
+            return t(this.props.children, this.props.params);
         }
     }
 };

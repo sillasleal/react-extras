@@ -113,11 +113,12 @@ function (_ComponentDefault) {
   return For;
 }(_ComponentDefault2.default);
 
+exports.default = For;
+
 _defineProperty(For, "defaultProps", {
   componentProps: function componentProps() {
     return {};
   }
 });
 
-var _default = For;
-exports.default = _default;
+;

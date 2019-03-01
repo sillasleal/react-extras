@@ -15,10 +15,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -34,6 +30,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /**/
 
@@ -81,26 +81,16 @@ exports.setLang = setLang;
 var t = function t(key) {
   var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var personalDict = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var dictionaries, dictionary;
-
-  if (Object.isObject(personalDict)) {
-    dictionaries = Object.assignDeep(_dictionary.dictionaries, personalDict);
-  } else {
-    dictionaries = _dictionary.dictionaries;
-  }
-
-  dictionary = dictionaries[_dictionary.language];
-
-  if (!Object.isObject(dictionary)) {
-    dictionary = {};
-  }
-  /**/
-
+  var personalLang = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
 
   if (String.isValid(key)) {
     //String
+    var language = String.isValid(personalLang) ? personalLang : _dictionary.language;
+    var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(_dictionary.dictionaries, personalDict) : _objectSpread({}, _dictionary.dictionaries);
+    var dictionary = Object.isObject(dictionaries[language]) ? dictionaries[language] : {};
     var word = dictionary[key];
-    var newWord = String.isValid(word) ? word : key;
+    var newWord = String.isValid(word) ? "".concat(word) : key;
+    /**/
 
     if (Object.isObject(params)) {
       for (var prop in params) {
@@ -138,7 +128,7 @@ var t = function t(key) {
     var keyWord = params[key[2]] === 1 ? key[1] : key[0];
     /**/
 
-    return t(keyWord, params);
+    return t(keyWord, params, personalDict, personalLang);
   } else {
     //Error
     console.error("INVALID_KEY_ON_TRANALSTAE", key);
@@ -186,6 +176,7 @@ function (_Component) {
 }(_react.Component);
 
 exports.TranslateProvider = TranslateProvider;
+;
 
 var Translate =
 /*#__PURE__*/
@@ -201,7 +192,23 @@ function (_Component2) {
   _createClass(Translate, [{
     key: "render",
     value: function render() {
-      return t(this.props.children, this.props.others, this.props.dictionary);
+      if (typeof children === 'function') {
+        var _this$props = this.props,
+            _children = _this$props.children,
+            params = _this$props.params,
+            dictionary = _this$props.dictionary,
+            lang = _this$props.lang;
+
+        var translate = function translate(key, others) {
+          return t(key, others, dictionary, lang);
+        };
+        /**/
+
+
+        return _children(translate, "".concat(_dictionary.language));
+      } else {
+        return t(this.props.children, this.prop.params);
+      }
     }
   }]);
 
@@ -209,3 +216,4 @@ function (_Component2) {
 }(_react.Component);
 
 exports.Translate = Translate;
+;

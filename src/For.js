@@ -7,7 +7,7 @@ import ComponentDefault from './ComponentDefault';
  * @description text
  * @author Sillas S. Leal<sillas.santos.leal@accenture.com>
  */
-class For extends ComponentDefault {
+export default class For extends ComponentDefault {
     static defaultProps = {
         componentProps: () => ({})
     }
@@ -49,6 +49,4 @@ class For extends ComponentDefault {
             }
         }
     }
-}
-
-export default  For;
+};
