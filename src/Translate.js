@@ -25,81 +25,118 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
 /**/
-import { Configs } from './Configs';
-
-const {
-    Consumer,
-    Provider
-} = React.createContext({});
-
-class TranslateDict extends Component {
-    static propTypes = {
-        dict: PropTypes.object,
-        children: PropTypes.node.isRequired
-    }
-    
-    static defaultProps = {
-        dict: {}
-    }
-    
-    render() {
-        const {
-            dict,
-            children
-        } = this.props;
-        /**/
-        return (<Provider value={dict}>{children}</Provider>);
-    }
-}
 
 /**
- * Description of Translate
- * @author Sillas S. Leal<sillas.s.leal@gmail.com>
+ * Configs of component
+ * @type object
  */
-class Translate extends Component {
-    static propTypes = {
-        dict: PropTypes.object,
-        children: PropTypes.string.isRequired,
-        plural: PropTypes.oneOfType([
-            PropTypes.array,
-            PropTypes.object
-        ])
-    }
-    
-//    static defaultProps = {
-//        plural: {}
-//    }
-    
-    constructor(props) {
-        super(props);
-        this.translate = this.translate.bind(this);
-    }
+let _dictionary = {
+    language: 'pt-BR',
+    dictionaries: {}
+};
 
-    translate(lang, dict, key, plural) {
-        const dictionary = dict[lang] || {};
+/**
+ * Method that set the default language
+ * @param {String} language The new language. The browser value will be used if the value is undefined
+ * @param {function} callback Function that run after change language
+ * @returns {undefined}
+ */
+export const setLang = (language, callback) => {
+    if (String.isValid(language)) {
+        //Set new language
+        _dictionary.language = language;
         /**/
-        return dictionary[key] || key;
+        if (typeof callback === 'function') {
+            callback(language);
+        }
+    } else {
+        //Detect the browser language
+        const newLanguage = Object.readProp(window, 'navigator.language');
+        setLang(newLanguage, callback);
     }
+};
 
+/**
+ * Function that replace a key for a word
+ * @param {String|Array} key
+ * @param {object} params
+ * @param {object} personalDict 
+ * @returns {undefined}
+ */
+export const t = (key, params = {}, personalDict = {}) => {
+    let dictionaries, dictionary;
+    if (Object.isObject(personalDict)) {
+        dictionaries = Object.assignDeep(_dictionary.dictionaries, personalDict);
+    } else {
+        dictionaries = _dictionary.dictionaries;
+    }
+    dictionary = dictionaries[_dictionary.language];
+    if (!Object.isObject(dictionary)) {
+        dictionary = {};
+    }
+    /**/
+    if (String.isValid(key)) {
+        //String
+        const word = dictionary[key];
+        let newWord = String.isValid(word) ? word : key;
+        if (Object.isObject(params)) {
+            for (var prop in params) {
+                newWord.replaceAll(`{${prop}}`, params[prop]);
+            }
+        }
+        if (newWord.indexOf("{") > -1) {
+            const wordSplit = newWord.split("{");
+            for (var item in wordSplit) {
+                const dictKey = wordSplit[item].substr(0, wordSplit[item].indexOf("}"));
+                if (String.isValid(dictKey) && String.isValid(dictionary[dictKey])) {
+                    newWord = newWord.replaceAll(dictKey, dictionary[dictKey]);
+                }
+            }
+        }
+        /**/
+        return newWord;
+    } else if (Array.isArray(key)) {
+        //Array
+        if (key.length < 1) {
+            console.error("INVALID_KEY_ARRAY_ON_TRANALSTAE", key);
+            console.error("The parameter array 'key' have need to have 3 elements: 0 => 'plural key', '1' => 'singular key', 2 => 'parameter of count'");
+            return '';
+        }
+        if (key.length < 3 || !Object.isObject(params)) {
+            return key[0];
+        }
+        const keyWord = params[key[2]] === 1 ? key[1] : key[0];
+        /**/
+        return t(keyWord, params);
+    } else {
+        //Error
+        console.error("INVALID_KEY_ON_TRANALSTAE", key);
+        console.error("The parameter 'key' have to be a String or a Array");
+        /**/
+        return '';
+}
+
+};
+
+export class TranslateProvider extends Component {
+    componentDidMount(){
+        setLang(this.props.language, this.forceUpdate());
+        this.setDictionary(this.dictionary);
+    }
+    
+    setDictionary(dictionary){
+        if(Object.isObject(dictionary)){
+            _dictionary.dictionaries = {...dictionary};
+        }
+    }
+    
     render() {
-        const {
-            dict: dictionary,
-            children,
-            plural
-        } = this.props;
-        /**/
-        return <Configs>{
-            ({lang}) => <Consumer>{
-                    (dict) => {
-                        if (Object.isObject(dictionary)) {
-                            return this.translate(lang, dictionary, children, plural);
-                        } else {
-                            return this.translate(lang, dict, children, plural);
-                        }
-                    }
-                }</Consumer>
-        }</Configs>;
+        return this.props.children;
     }
 }
 
-export {TranslateDict, Translate};
+export class Translate extends Component {
+    render() {
+        return t(this.props.children, this.props.others, this.props.dictionary);
+    }
+}

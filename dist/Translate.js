@@ -3,19 +3,21 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Translate = exports.TranslateDict = void 0;
+exports.Translate = exports.TranslateProvider = exports.t = exports.setLang = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _Configs = require("./Configs");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -33,100 +35,173 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+/**/
 
-var _React$createContext = _react.default.createContext({}),
-    Consumer = _React$createContext.Consumer,
-    Provider = _React$createContext.Provider;
-
-var TranslateDict =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(TranslateDict, _Component);
-
-  function TranslateDict() {
-    _classCallCheck(this, TranslateDict);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(TranslateDict).apply(this, arguments));
-  }
-
-  _createClass(TranslateDict, [{
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          dict = _this$props.dict,
-          children = _this$props.children;
-      /**/
-
-      return _react.default.createElement(Provider, {
-        value: dict
-      }, children);
-    }
-  }]);
-
-  return TranslateDict;
-}(_react.Component);
 /**
- * Description of Translate
- * @author Sillas S. Leal<sillas.s.leal@gmail.com>
+ * Configs of component
+ * @type object
+ */
+var _dictionary = {
+  language: 'pt-BR',
+  dictionaries: {}
+};
+/**
+ * Method that set the default language
+ * @param {String} language The new language. The browser value will be used if the value is undefined
+ * @param {function} callback Function that run after change language
+ * @returns {undefined}
+ */
+
+var setLang = function setLang(language, callback) {
+  if (String.isValid(language)) {
+    //Set new language
+    _dictionary.language = language;
+    /**/
+
+    if (typeof callback === 'function') {
+      callback(language);
+    }
+  } else {
+    //Detect the browser language
+    var newLanguage = Object.readProp(window, 'navigator.language');
+    setLang(newLanguage, callback);
+  }
+};
+/**
+ * Function that replace a key for a word
+ * @param {String|Array} key
+ * @param {object} params
+ * @param {object} personalDict 
+ * @returns {undefined}
  */
 
 
-exports.TranslateDict = TranslateDict;
+exports.setLang = setLang;
 
-_defineProperty(TranslateDict, "propTypes", {
-  dict: _propTypes.default.object,
-  children: _propTypes.default.node.isRequired
-});
+var t = function t(key) {
+  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var personalDict = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var dictionaries, dictionary;
 
-_defineProperty(TranslateDict, "defaultProps", {
-  dict: {}
-});
+  if (Object.isObject(personalDict)) {
+    dictionaries = Object.assignDeep(_dictionary.dictionaries, personalDict);
+  } else {
+    dictionaries = _dictionary.dictionaries;
+  }
+
+  dictionary = dictionaries[_dictionary.language];
+
+  if (!Object.isObject(dictionary)) {
+    dictionary = {};
+  }
+  /**/
+
+
+  if (String.isValid(key)) {
+    //String
+    var word = dictionary[key];
+    var newWord = String.isValid(word) ? word : key;
+
+    if (Object.isObject(params)) {
+      for (var prop in params) {
+        newWord.replaceAll("{".concat(prop, "}"), params[prop]);
+      }
+    }
+
+    if (newWord.indexOf("{") > -1) {
+      var wordSplit = newWord.split("{");
+
+      for (var item in wordSplit) {
+        var dictKey = wordSplit[item].substr(0, wordSplit[item].indexOf("}"));
+
+        if (String.isValid(dictKey) && String.isValid(dictionary[dictKey])) {
+          newWord = newWord.replaceAll(dictKey, dictionary[dictKey]);
+        }
+      }
+    }
+    /**/
+
+
+    return newWord;
+  } else if (Array.isArray(key)) {
+    //Array
+    if (key.length < 1) {
+      console.error("INVALID_KEY_ARRAY_ON_TRANALSTAE", key);
+      console.error("The parameter array 'key' have need to have 3 elements: 0 => 'plural key', '1' => 'singular key', 2 => 'parameter of count'");
+      return '';
+    }
+
+    if (key.length < 3 || !Object.isObject(params)) {
+      return key[0];
+    }
+
+    var keyWord = params[key[2]] === 1 ? key[1] : key[0];
+    /**/
+
+    return t(keyWord, params);
+  } else {
+    //Error
+    console.error("INVALID_KEY_ON_TRANALSTAE", key);
+    console.error("The parameter 'key' have to be a String or a Array");
+    /**/
+
+    return '';
+  }
+};
+
+exports.t = t;
+
+var TranslateProvider =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(TranslateProvider, _Component);
+
+  function TranslateProvider() {
+    _classCallCheck(this, TranslateProvider);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(TranslateProvider).apply(this, arguments));
+  }
+
+  _createClass(TranslateProvider, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      setLang(this.props.language, this.forceUpdate());
+      this.setDictionary(this.dictionary);
+    }
+  }, {
+    key: "setDictionary",
+    value: function setDictionary(dictionary) {
+      if (Object.isObject(dictionary)) {
+        _dictionary.dictionaries = _objectSpread({}, dictionary);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return this.props.children;
+    }
+  }]);
+
+  return TranslateProvider;
+}(_react.Component);
+
+exports.TranslateProvider = TranslateProvider;
 
 var Translate =
 /*#__PURE__*/
 function (_Component2) {
   _inherits(Translate, _Component2);
 
-  function Translate(props) {
-    var _this;
-
+  function Translate() {
     _classCallCheck(this, Translate);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Translate).call(this, props));
-    _this.translate = _this.translate.bind(_assertThisInitialized(_this));
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(Translate).apply(this, arguments));
   }
 
   _createClass(Translate, [{
-    key: "translate",
-    value: function translate(lang, dict, key, plural) {
-      var dictionary = dict[lang] || {};
-      /**/
-
-      return dictionary[key] || key;
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-
-      var _this$props2 = this.props,
-          dictionary = _this$props2.dict,
-          children = _this$props2.children,
-          plural = _this$props2.plural;
-      /**/
-
-      return _react.default.createElement(_Configs.Configs, null, function (_ref) {
-        var lang = _ref.lang;
-        return _react.default.createElement(Consumer, null, function (dict) {
-          if (Object.isObject(dictionary)) {
-            return _this2.translate(lang, dictionary, children, plural);
-          } else {
-            return _this2.translate(lang, dict, children, plural);
-          }
-        });
-      });
+      return t(this.props.children, this.props.others, this.props.dictionary);
     }
   }]);
 
@@ -134,12 +209,3 @@ function (_Component2) {
 }(_react.Component);
 
 exports.Translate = Translate;
-
-_defineProperty(Translate, "propTypes", {
-  dict: _propTypes.default.object,
-  children: _propTypes.default.string.isRequired,
-  plural: _propTypes.default.oneOfType([_propTypes.default.array, _propTypes.default.object]) //    static defaultProps = {
-  //        plural: {}
-  //    }
-
-});

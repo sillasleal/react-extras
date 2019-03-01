@@ -1,6 +1,6 @@
 {
     "name": "@ssl-lib/react-extras",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "",
     "main": "dist/index.js",
     "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",
@@ -12,6 +12,7 @@
         "preinstall": "node -e \"const fs = require('fs');if(fs.existsSync('./package-lock.json')){fs.unlinkSync('./package-lock.json');}\"",
         "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
         "build": "babel ./src --out-dir ./dist",
+        "postbuild_": "react-docgen ./src ./docs",
         "dev": "nodemon --exec npm run build",
         "prepublish": "npm run test && npm run build",
         "deploy": "npm publish --access=public"
@@ -32,6 +33,7 @@
         "@babel/preset-env": "^7.3.4",
         "@babel/preset-react": "^7.0.0",
         "fs-extra": "^7.0.1",
-        "nodemon": "^1.18.10"
+        "nodemon": "^1.18.10",
+        "react-docgen": "^4.0.1"
     }
 }

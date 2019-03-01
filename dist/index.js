@@ -33,22 +33,10 @@ Object.defineProperty(exports, "For", {
     return _For.default;
   }
 });
-Object.defineProperty(exports, "Configs", {
+Object.defineProperty(exports, "TranslateProvider", {
   enumerable: true,
   get: function get() {
-    return _Configs.Configs;
-  }
-});
-Object.defineProperty(exports, "ConfigsSet", {
-  enumerable: true,
-  get: function get() {
-    return _Configs.ConfigsSet;
-  }
-});
-Object.defineProperty(exports, "TranslateDict", {
-  enumerable: true,
-  get: function get() {
-    return _Translate.TranslateDict;
+    return _Translate.TranslateProvider;
   }
 });
 Object.defineProperty(exports, "Translate", {
@@ -57,12 +45,22 @@ Object.defineProperty(exports, "Translate", {
     return _Translate.Translate;
   }
 });
+Object.defineProperty(exports, "t", {
+  enumerable: true,
+  get: function get() {
+    return _Translate.t;
+  }
+});
+Object.defineProperty(exports, "setLang", {
+  enumerable: true,
+  get: function get() {
+    return _Translate.setLang;
+  }
+});
 
 var _IfComponent = require("./IfComponent");
 
 var _For = _interopRequireDefault(require("./For"));
-
-var _Configs = require("./Configs");
 
 var _Translate = require("./Translate");
 

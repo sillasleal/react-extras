@@ -24,12 +24,10 @@
 
 import {IfComponent, If, ElseIf, Else} from './IfComponent';
 import For from './For';
-import { Configs, ConfigsSet } from './Configs';
-import {TranslateDict, Translate} from './Translate';
+import {TranslateProvider, Translate, t, setLang} from './Translate';
 /**/
 export {
     IfComponent, If, ElseIf, Else,
     For,
-    Configs, ConfigsSet,
-    TranslateDict, Translate
+    TranslateProvider, Translate, t, setLang
 };
