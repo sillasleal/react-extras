@@ -34,9 +34,10 @@ const {Consumer, Provider} = createContext({
 export class TranslateProvider extends Component {
     static propTypes = {
         dictionary: PropTypes.object,
-        language: PropTypes.string
+        language: PropTypes.string,
+        errorLanguage: PropTypes.string.isRequired
     };
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -49,7 +50,7 @@ export class TranslateProvider extends Component {
         this.setLang(this.props.language, () => this.forceUpdate());
         this.setDictionary(this.props.dictionary);
     }
-    
+
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.language !== nextState.language;
     }
@@ -100,6 +101,8 @@ export class TranslateProvider extends Component {
                     {...this.state.dictionary};
             const dictionary = Object.isObject(dictionaries[language]) ?
                     dictionaries[language] :
+                    Object.isObject(dictionaries[this.props.errorLanguage]) ?
+                    dictionaries[this.props.errorLanguage] :
                     {};
             const word = dictionary[key];
             if (typeof word === 'function') {

@@ -128,7 +128,7 @@ function (_Component) {
         var newWord;
         var language = String.isValid(personalLang) ? personalLang : this.state.language;
         var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(this.state.dictionary, personalDict) : _objectSpread({}, this.state.dictionary);
-        var dictionary = Object.isObject(dictionaries[language]) ? dictionaries[language] : {};
+        var dictionary = Object.isObject(dictionaries[language]) ? dictionaries[language] : Object.isObject(dictionaries[this.props.errorLanguage]) ? dictionaries[this.props.errorLanguage] : {};
         var word = dictionary[key];
 
         if (typeof word === 'function') {
@@ -210,7 +210,8 @@ exports.TranslateProvider = TranslateProvider;
 
 _defineProperty(TranslateProvider, "propTypes", {
   dictionary: _propTypes.default.object,
-  language: _propTypes.default.string
+  language: _propTypes.default.string,
+  errorLanguage: _propTypes.default.string.isRequired
 });
 
 var Translate = function Translate(_ref) {
