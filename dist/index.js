@@ -45,16 +45,10 @@ Object.defineProperty(exports, "Translate", {
     return _Translate.Translate;
   }
 });
-Object.defineProperty(exports, "t", {
+Object.defineProperty(exports, "SetLang", {
   enumerable: true,
   get: function get() {
-    return _Translate.t;
-  }
-});
-Object.defineProperty(exports, "setLang", {
-  enumerable: true,
-  get: function get() {
-    return _Translate.setLang;
+    return _Translate.SetLang;
   }
 });
 
