@@ -63,22 +63,21 @@ export const setLang = (language, callback) => {
  * @param {object} personalDict 
  * @returns {undefined}
  */
-export const t = (key, params = {}, personalDict = {}) => {
-    let dictionaries, dictionary;
-    if (Object.isObject(personalDict)) {
-        dictionaries = Object.assignDeep(_dictionary.dictionaries, personalDict);
-    } else {
-        dictionaries = _dictionary.dictionaries;
-    }
-    dictionary = dictionaries[_dictionary.language];
-    if (!Object.isObject(dictionary)) {
-        dictionary = {};
-    }
-    /**/
+export const t = (key, params = {}, personalDict = {}, personalLang = '') => {
     if (String.isValid(key)) {
         //String
+        const language = String.isValid(personalLang) ?
+                personalLang :
+                _dictionary.language;
+        const dictionaries = Object.isObject(personalDict) ?
+                Object.assignDeep(_dictionary.dictionaries, personalDict) :
+                {..._dictionary.dictionaries};
+        const dictionary = Object.isObject(dictionaries[language]) ?
+                dictionaries[language] :
+                {};
         const word = dictionary[key];
-        let newWord = String.isValid(word) ? word : key;
+        let newWord = String.isValid(word) ? `${word}` : key;
+        /**/
         if (Object.isObject(params)) {
             for (var prop in params) {
                 newWord.replaceAll(`{${prop}}`, params[prop]);
@@ -107,7 +106,7 @@ export const t = (key, params = {}, personalDict = {}) => {
         }
         const keyWord = params[key[2]] === 1 ? key[1] : key[0];
         /**/
-        return t(keyWord, params);
+        return t(keyWord, params, personalDict, personalLang);
     } else {
         //Error
         console.error("INVALID_KEY_ON_TRANALSTAE", key);
@@ -119,24 +118,31 @@ export const t = (key, params = {}, personalDict = {}) => {
 };
 
 export class TranslateProvider extends Component {
-    componentDidMount(){
+    componentDidMount() {
         setLang(this.props.language, this.forceUpdate());
         this.setDictionary(this.dictionary);
     }
-    
-    setDictionary(dictionary){
-        if(Object.isObject(dictionary)){
+
+    setDictionary(dictionary) {
+        if (Object.isObject(dictionary)) {
             _dictionary.dictionaries = {...dictionary};
         }
     }
-    
+
     render() {
         return this.props.children;
     }
-}
+};
 
 export class Translate extends Component {
     render() {
-        return t(this.props.children, this.props.others, this.props.dictionary);
+        if (typeof children === 'function') {
+            const {children, params, dictionary, lang} = this.props;
+            const translate = (key, others) => t(key, others, dictionary, lang);
+            /**/
+            return children(translate, `${_dictionary.language}`);
+        } else {
+            return t(this.props.children, this.prop.params);
+        }
     }
-}
+};
