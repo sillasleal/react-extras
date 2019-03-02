@@ -5,17 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Else = exports.ElseIf = exports.If = exports.IfComponent = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = require("react");
 
-var _ComponentDefault2 = _interopRequireDefault(require("./ComponentDefault"));
+var _ComponentBase4 = _interopRequireDefault(require("./ComponentBase"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -40,8 +38,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  */
 var IfComponent =
 /*#__PURE__*/
-function (_ComponentDefault) {
-  _inherits(IfComponent, _ComponentDefault);
+function (_Component) {
+  _inherits(IfComponent, _Component);
 
   function IfComponent() {
     _classCallCheck(this, IfComponent);
@@ -50,73 +48,48 @@ function (_ComponentDefault) {
   }
 
   _createClass(IfComponent, [{
-    key: "getChildrens",
-    value: function getChildrens() {
-      var _this = this;
-
-      var children = null,
-          ifCpm = 0,
-          elseCpm;
-      /**/
-
-      _react.Children.forEach(this.props.children, function (item) {
-        if (elseCpm) {
-          //Caso um else tenha sido encontrado, todo o restante é igorado
-          return;
-        }
-        /**/
-
-
-        if (!ifCpm && item.type.componentName !== 'if') {
-          throw new Error("O primeiro teste deve ser obrigatoriamente um IF");
-        }
-
-        if (ifCpm > 1 && item.type.componentName === 'if') {
-          throw new Error("Defina apenas um IF por IfComponent");
-        }
-
-        if (item.type.componentName === 'else') {
-          if (elseCpm) {
-            throw new Error("Defina apenas um ELSE por IfComponent");
-          } else {
-            elseCpm = item;
-          }
-        }
-
-        if (item.props.test && !children) {
-          children = _this.returnComponent(item);
-        }
-
-        ifCpm++;
-      });
-
-      if (!children && elseCpm) {
-        children = this.returnComponent(elseCpm);
-      }
-      /**/
-
-
-      return children;
-    }
-  }, {
     key: "render",
     value: function render() {
-      var children = this.getChildrens();
+      var _this$props = this.props,
+          children = _this$props.children,
+          test = _this$props.test;
       /**/
 
-      return children;
+      if ((0, _react.isValidElement)(children)) {
+        if (children.props.test && children.props.name === 'if') {
+          return children;
+        }
+      } else if (Array.isArray(children)) {
+        for (var item in children) {
+          if (Number(item) !== 0 && children[item].props.name === 'if') {
+            throw new Error("If have to be the first children in IfComponent");
+          }
+
+          if (Number(item) === 0 && children[item].props.name === 'elseif') {
+            throw new Error("The first children of IfComponent have to be a If");
+          }
+
+          if (children[item].props.test || children[item].props.name === 'else') {
+            return children[item];
+          }
+        }
+      } else {
+        return null;
+      }
+
+      return null;
     }
   }]);
 
   return IfComponent;
-}(_ComponentDefault2.default);
+}(_react.Component);
 
 exports.IfComponent = IfComponent;
 
 var If =
 /*#__PURE__*/
-function (_Component) {
-  _inherits(If, _Component);
+function (_ComponentBase) {
+  _inherits(If, _ComponentBase);
 
   function If() {
     _classCallCheck(this, If);
@@ -124,24 +97,19 @@ function (_Component) {
     return _possibleConstructorReturn(this, _getPrototypeOf(If).apply(this, arguments));
   }
 
-  _createClass(If, [{
-    key: "render",
-    value: function render() {
-      return null;
-    }
-  }]);
-
   return If;
-}(_react.Component);
+}(_ComponentBase4.default);
 
 exports.If = If;
 
-_defineProperty(If, "componentName", 'if');
+_defineProperty(If, "defaultProps", {
+  name: 'if'
+});
 
 var ElseIf =
 /*#__PURE__*/
-function (_If) {
-  _inherits(ElseIf, _If);
+function (_ComponentBase2) {
+  _inherits(ElseIf, _ComponentBase2);
 
   function ElseIf() {
     _classCallCheck(this, ElseIf);
@@ -150,16 +118,18 @@ function (_If) {
   }
 
   return ElseIf;
-}(If);
+}(_ComponentBase4.default);
 
 exports.ElseIf = ElseIf;
 
-_defineProperty(ElseIf, "componentName", 'elseif');
+_defineProperty(ElseIf, "defaultProps", {
+  name: 'elseif'
+});
 
 var Else =
 /*#__PURE__*/
-function (_If2) {
-  _inherits(Else, _If2);
+function (_ComponentBase3) {
+  _inherits(Else, _ComponentBase3);
 
   function Else() {
     _classCallCheck(this, Else);
@@ -168,8 +138,10 @@ function (_If2) {
   }
 
   return Else;
-}(If);
+}(_ComponentBase4.default);
 
 exports.Else = Else;
 
-_defineProperty(Else, "componentName", 'else');
+_defineProperty(Else, "defaultProps", {
+  name: 'else'
+});

@@ -3,19 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.Default = exports.Case = exports.Switch = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = require("react");
 
-var _ComponentDefault2 = _interopRequireDefault(require("./ComponentDefault"));
+var _ComponentBase3 = _interopRequireDefault(require("./ComponentBase"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -39,8 +37,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  */
 var Switch =
 /*#__PURE__*/
-function (_ComponentDefault) {
-  _inherits(Switch, _ComponentDefault);
+function (_Component) {
+  _inherits(Switch, _Component);
 
   function Switch() {
     _classCallCheck(this, Switch);
@@ -49,53 +47,70 @@ function (_ComponentDefault) {
   }
 
   _createClass(Switch, [{
-    key: "getChildrens",
-    value: function getChildrens() {
-      var _this = this;
-
-      var children = [];
-      var findedDefault = false;
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          children = _this$props.children,
+          value = _this$props.value;
       /**/
 
-      _react.Children.forEach(this.props.children, function (item) {
-        if (!findedDefault && item.type.componentName === 'default') {
-          //Encontrou um default
-          findedDefault = true;
-          children.push(_this.returnComponent(item));
+      if ((0, _react.isValidElement)(children)) {
+        if (children.props.value === value || children.props.name === 'default') {
+          return children;
         }
+      } else if (Array.isArray(children)) {
+        var multReturn = [];
 
-        if (!findedDefault) {
-          //Executa até encontrar um default ou um case break
-          if (item.type.componentName === 'case') {
-            if (item.props.value === _this.props.value) {
-              children.push(_this.returnComponent(item, _this.props.value));
+        for (var item in children) {
+          if (Number(item) !== 0 && children[item].props.name === 'if') {
+            throw new Error("If have to be the first children in IfComponent");
+          }
 
-              if (item.props.break) {
-                findedDefault = true;
-              }
+          if (Number(item) === 0 && children[item].props.name === 'default') {
+            throw new Error("The first children of IfComponent have to be a Case");
+          } //                if (children[item].props.value === value || children[item].props.name === 'default') {
+
+
+          if (children[item].props.value === value) {
+            multReturn.push(children[item]);
+
+            if (children[item].props.break) {
+              break;
             }
           }
         }
-      });
+        /**/
+
+
+        if (!multReturn.length) {
+          var lastChild = children[children.length - 1];
+
+          if (lastChild && lastChild.props.name === 'default') {
+            return lastChild; //                } else {
+            //                    return null;
+          }
+        } else {
+          return multReturn;
+        } //        } else {
+        //            return null;
+
+      }
       /**/
 
 
-      return children.length ? children : null;
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return this.getChildrens();
+      return null;
     }
   }]);
 
   return Switch;
-}(_ComponentDefault2.default);
+}(_react.Component);
+
+exports.Switch = Switch;
 
 var Case =
 /*#__PURE__*/
-function (_Component) {
-  _inherits(Case, _Component);
+function (_ComponentBase) {
+  _inherits(Case, _ComponentBase);
 
   function Case() {
     _classCallCheck(this, Case);
@@ -103,22 +118,19 @@ function (_Component) {
     return _possibleConstructorReturn(this, _getPrototypeOf(Case).apply(this, arguments));
   }
 
-  _createClass(Case, [{
-    key: "render",
-    value: function render() {
-      return null;
-    }
-  }]);
-
   return Case;
-}(_react.Component);
+}(_ComponentBase3.default);
 
-_defineProperty(Case, "componentName", 'case');
+exports.Case = Case;
+
+_defineProperty(Case, "defaultProps", {
+  name: 'case'
+});
 
 var Default =
 /*#__PURE__*/
-function (_Component2) {
-  _inherits(Default, _Component2);
+function (_ComponentBase2) {
+  _inherits(Default, _ComponentBase2);
 
   function Default() {
     _classCallCheck(this, Default);
@@ -126,17 +138,11 @@ function (_Component2) {
     return _possibleConstructorReturn(this, _getPrototypeOf(Default).apply(this, arguments));
   }
 
-  _createClass(Default, [{
-    key: "render",
-    value: function render() {
-      return null;
-    }
-  }]);
-
   return Default;
-}(_react.Component);
+}(_ComponentBase3.default);
 
-_defineProperty(Default, "componentName", 'default');
+exports.Default = Default;
 
-var _default = Switch;
-exports.default = _default;
+_defineProperty(Default, "defaultProps", {
+  name: 'default'
+});
