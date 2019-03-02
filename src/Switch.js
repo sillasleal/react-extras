@@ -22,60 +22,66 @@
  * THE SOFTWARE.
  */
 
-import React, { Component, Children, createElement } from "react";
+import { Component, isValidElement } from "react";
 /**/
-import ComponentDefault from './ComponentDefault';
+import ComponentBase from './ComponentBase';
 
 /**
  * Description of Switch
  * @author Sillas S. Leal<sillas.s.leal@gmail.com>
  */
-class Switch extends ComponentDefault {
-    getChildrens() {
-        let children = [];
-        let findedDefault = false;
+export class Switch extends Component {
+    render() {
+        const {children, value} = this.props;
         /**/
-        Children.forEach(this.props.children, (item) => {
-            if (!findedDefault && item.type.componentName === 'default') {
-                //Encontrou um default
-                findedDefault = true;
-                children.push(this.returnComponent(item));
+        if (isValidElement(children)) {
+            if (children.props.value === value || children.props.name === 'default') {
+                return children;
             }
-            if (!findedDefault) {
-                //Executa até encontrar um default ou um case break
-                if (item.type.componentName === 'case') {
-                    if(item.props.value === this.props.value){
-                        children.push(this.returnComponent(item, this.props.value));
-                        if(item.props.break){
-                            findedDefault = true;
-                        }
+        } else if (Array.isArray(children)) {
+            let multReturn = [];
+            for (var item in children) {
+                if (Number(item) !== 0 && children[item].props.name === 'if') {
+                    throw new Error("If have to be the first children in IfComponent");
+                }
+                if (Number(item) === 0 && children[item].props.name === 'default') {
+                    throw new Error("The first children of IfComponent have to be a Case");
+                }
+//                if (children[item].props.value === value || children[item].props.name === 'default') {
+                if (children[item].props.value === value) {
+                    multReturn.push(children[item]);
+                    if (children[item].props.break) {
+                        break;
                     }
                 }
             }
-        });
+            /**/
+            if (!multReturn.length) {
+                const lastChild = children[children.length - 1];
+                if (lastChild && lastChild.props.name === 'default') {
+                    return lastChild;
+//                } else {
+//                    return null;
+                }
+            } else {
+                return multReturn;
+            }
+//        } else {
+//            return null;
+        }
         /**/
-        return children.length ? children : null;
-    }
-
-    render() {
-        return this.getChildrens();
-    }
-}
-
-class Case extends Component {
-    static componentName = 'case';
-
-    render() {
         return null;
     }
 }
 
-class Default extends Component {
-    static componentName = 'default';
-
-    render() {
-        return null;
+export class Case extends ComponentBase {
+    static defaultProps = {
+        name: 'case'
     }
 }
 
-export default Switch;
+export class Default extends ComponentBase {
+    static defaultProps = {
+        name: 'default'
+    }
+}

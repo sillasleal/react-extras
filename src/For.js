@@ -1,52 +1,17 @@
-import React from 'react';
+import {createElement, memo} from 'react';
 /**/
-import ComponentDefault from './ComponentDefault';
 
+
+const testCache = (prev, next) => JSON.stringify(prev) !== JSON.stringify(next);
 /**
  * Component For
  * @description text
  * @author Sillas S. Leal<sillas.santos.leal@accenture.com>
  */
-export default class For extends ComponentDefault {
-    static defaultProps = {
-        componentProps: () => ({})
-    }
-    
-    render() {
-        const {
-            children, 
-            in: inArray, 
-            each, 
-            component, 
-            componentProps
-        } = this.props;
-        let newExtraProps;
-        /**/
-        if(componentProps && typeof componentProps === 'object' && !Array.isArray(componentProps)){
-            newExtraProps = () => componentProps;
-        } else if (typeof componentProps !== 'function') {
-            newExtraProps = () => ({});
-        }else {
-            newExtraProps = componentProps;
-        }
-        /**/
-        if(typeof component === 'function'){
-            return inArray.map((item, key) => this.createCpm(component, {...{...{[each]: item}, ...newExtraProps(item)}}, item, key));
+export default memo(({children, of: inArray, to: each="children"}) => inArray.map((item, key) => {
+        if (typeof children === 'function') {
+            return children(item, key);
         } else {
-            if (typeof children === 'function') {
-                return inArray.map(children);
-            } else if (typeof children === 'object' && !Array.isArray(children) && children) {
-                const Cpm = children.type;
-                /**/
-                if(each){
-                    return inArray.map((item, key) => <Cpm key={key} {...{...children.props, ...{[each]: item}, ...newExtraProps(item)}}/>);
-                } else {
-                    return inArray.map((item, key) => <Cpm key={key} {...{...children.props, ...newExtraProps(item)}}>{item}</Cpm>);
-                }
-
-            } else {
-                throw new TypeError("Invalid type of children in For component");
-            }
+            return createElement(children.type, {key, [each]: item}, null, each === 'children' ? item : null);
         }
-    }
-};
+    }), testCache);
