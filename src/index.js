@@ -25,9 +25,11 @@
 import {IfComponent, If, ElseIf, Else} from './IfComponent';
 import For from './For';
 import {TranslateProvider, Translate, SetLang} from './Translate';
+import {Switch, Case, Default} from './Switch';
 /**/
 export {
     IfComponent, If, ElseIf, Else,
     For,
-    TranslateProvider, Translate, SetLang
+    TranslateProvider, Translate, SetLang,
+    Switch, Case, Default
 };

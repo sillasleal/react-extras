@@ -73,11 +73,6 @@ function (_Component) {
       this.setDictionary(this.props.dictionary);
     }
   }, {
-    key: "shouldComponentUpdate",
-    value: function shouldComponentUpdate(nextProps, nextState) {
-      return this.state.language !== nextState.language;
-    }
-  }, {
     key: "setLang",
     value: function setLang(language) {
       if (String.isValid(language)) {
@@ -133,6 +128,8 @@ function (_Component) {
 
         if (typeof word === 'function') {
           newWord = word(language, dictionaries);
+        } else if (typeof word === 'undefined') {
+          newWord = key;
         } else {
           newWord = "".concat(word);
         }

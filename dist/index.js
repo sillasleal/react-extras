@@ -51,11 +51,31 @@ Object.defineProperty(exports, "SetLang", {
     return _Translate.SetLang;
   }
 });
+Object.defineProperty(exports, "Switch", {
+  enumerable: true,
+  get: function get() {
+    return _Switch.Switch;
+  }
+});
+Object.defineProperty(exports, "Case", {
+  enumerable: true,
+  get: function get() {
+    return _Switch.Case;
+  }
+});
+Object.defineProperty(exports, "Default", {
+  enumerable: true,
+  get: function get() {
+    return _Switch.Default;
+  }
+});
 
 var _IfComponent = require("./IfComponent");
 
 var _For = _interopRequireDefault(require("./For"));
 
 var _Translate = require("./Translate");
+
+var _Switch = require("./Switch");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

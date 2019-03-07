@@ -24,7 +24,6 @@
 
 import { Component, isValidElement } from "react";
 /**/
-import ComponentBase from './ComponentBase';
 
 /**
  * Description of Switch
@@ -47,7 +46,6 @@ export class Switch extends Component {
                 if (Number(item) === 0 && children[item].props.name === 'default') {
                     throw new Error("The first children of IfComponent have to be a Case");
                 }
-//                if (children[item].props.value === value || children[item].props.name === 'default') {
                 if (children[item].props.value === value) {
                     multReturn.push(children[item]);
                     if (children[item].props.break) {
@@ -60,28 +58,43 @@ export class Switch extends Component {
                 const lastChild = children[children.length - 1];
                 if (lastChild && lastChild.props.name === 'default') {
                     return lastChild;
-//                } else {
-//                    return null;
+                } else {
+                    return null;
                 }
             } else {
                 return multReturn;
             }
-//        } else {
-//            return null;
+        } else {
+            return null;
         }
-        /**/
         return null;
     }
 }
 
-export class Case extends ComponentBase {
+export class Case extends Component {
     static defaultProps = {
         name: 'case'
     }
+
+    render() {
+        if (typeof this.props.children === 'function') {
+            return this.props.children();
+        } else {
+            return this.props.children;
+        }
+    }
 }
 
-export class Default extends ComponentBase {
+export class Default extends Component {
     static defaultProps = {
         name: 'default'
+    }
+
+    render() {
+        if (typeof this.props.children === 'function') {
+            return this.props.children();
+        } else {
+            return this.props.children;
+        }
     }
 }

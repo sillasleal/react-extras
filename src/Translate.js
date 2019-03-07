@@ -51,10 +51,6 @@ export class TranslateProvider extends Component {
         this.setDictionary(this.props.dictionary);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.language !== nextState.language;
-    }
-
     setLang(language) {
         if (String.isValid(language)) {
             this.setState({
@@ -107,6 +103,8 @@ export class TranslateProvider extends Component {
             const word = dictionary[key];
             if (typeof word === 'function') {
                 newWord = word(language, dictionaries);
+            } else if (typeof word === 'undefined') {
+                newWord = key;
             } else {
                 newWord = `${word}`;
             }

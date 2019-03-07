@@ -7,10 +7,6 @@ exports.Default = exports.Case = exports.Switch = void 0;
 
 var _react = require("react");
 
-var _ComponentBase3 = _interopRequireDefault(require("./ComponentBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -30,6 +26,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+/**/
 
 /**
  * Description of Switch
@@ -68,8 +66,7 @@ function (_Component) {
 
           if (Number(item) === 0 && children[item].props.name === 'default') {
             throw new Error("The first children of IfComponent have to be a Case");
-          } //                if (children[item].props.value === value || children[item].props.name === 'default') {
-
+          }
 
           if (children[item].props.value === value) {
             multReturn.push(children[item]);
@@ -86,17 +83,16 @@ function (_Component) {
           var lastChild = children[children.length - 1];
 
           if (lastChild && lastChild.props.name === 'default') {
-            return lastChild; //                } else {
-            //                    return null;
+            return lastChild;
+          } else {
+            return null;
           }
         } else {
           return multReturn;
-        } //        } else {
-        //            return null;
-
+        }
+      } else {
+        return null;
       }
-      /**/
-
 
       return null;
     }
@@ -109,8 +105,8 @@ exports.Switch = Switch;
 
 var Case =
 /*#__PURE__*/
-function (_ComponentBase) {
-  _inherits(Case, _ComponentBase);
+function (_Component2) {
+  _inherits(Case, _Component2);
 
   function Case() {
     _classCallCheck(this, Case);
@@ -118,8 +114,19 @@ function (_ComponentBase) {
     return _possibleConstructorReturn(this, _getPrototypeOf(Case).apply(this, arguments));
   }
 
+  _createClass(Case, [{
+    key: "render",
+    value: function render() {
+      if (typeof this.props.children === 'function') {
+        return this.props.children();
+      } else {
+        return this.props.children;
+      }
+    }
+  }]);
+
   return Case;
-}(_ComponentBase3.default);
+}(_react.Component);
 
 exports.Case = Case;
 
@@ -129,8 +136,8 @@ _defineProperty(Case, "defaultProps", {
 
 var Default =
 /*#__PURE__*/
-function (_ComponentBase2) {
-  _inherits(Default, _ComponentBase2);
+function (_Component3) {
+  _inherits(Default, _Component3);
 
   function Default() {
     _classCallCheck(this, Default);
@@ -138,8 +145,19 @@ function (_ComponentBase2) {
     return _possibleConstructorReturn(this, _getPrototypeOf(Default).apply(this, arguments));
   }
 
+  _createClass(Default, [{
+    key: "render",
+    value: function render() {
+      if (typeof this.props.children === 'function') {
+        return this.props.children();
+      } else {
+        return this.props.children;
+      }
+    }
+  }]);
+
   return Default;
-}(_ComponentBase3.default);
+}(_react.Component);
 
 exports.Default = Default;
 
