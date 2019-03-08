@@ -72,6 +72,12 @@ function (_Component) {
       });
       this.setDictionary(this.props.dictionary);
     }
+    /**
+     * Método que define o idioma
+     * @param {String} language O idioma a ser definido
+     * @returns {null}
+     */
+
   }, {
     key: "setLang",
     value: function setLang(language) {
@@ -90,6 +96,13 @@ function (_Component) {
 
       return null;
     }
+    /**
+     * Método que define o dicionário
+     * @param {object} dictionary O dicionário
+     * @param {String} language (Opcional)O idioma do dicionário
+     * @returns {undefined}
+     */
+
   }, {
     key: "setDictionary",
     value: function setDictionary(dictionary, language) {
@@ -111,6 +124,15 @@ function (_Component) {
         });
       }
     }
+    /**
+     * Método que realiza a tradução da palavra para o idioma selecionado
+     * @param {String} key A chave referente a palavra
+     * @param {object} params Os parametros a serem inseridos na string ou usados para o plural
+     * @param {object} personalDict Um dicionário exclusivo da execução
+     * @param {String} personalLang O idioma especifico da execução
+     * @returns {newWord|TranslateProvider@call;translate|TranslateProvider.translate.key|String}
+     */
+
   }, {
     key: "translate",
     value: function translate(key) {
@@ -124,7 +146,8 @@ function (_Component) {
         var language = String.isValid(personalLang) ? personalLang : this.state.language;
         var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(this.state.dictionary, personalDict) : _objectSpread({}, this.state.dictionary);
         var dictionary = Object.isObject(dictionaries[language]) ? dictionaries[language] : Object.isObject(dictionaries[this.props.errorLanguage]) ? dictionaries[this.props.errorLanguage] : {};
-        var word = dictionary[key];
+        var dictCoringa = Object.isObject(dictionaries['*']) ? dictionaries['*'] : {};
+        var word = dictionary[key] || dictCoringa[key] || key;
 
         if (typeof word === 'function') {
           newWord = word(language, dictionaries);

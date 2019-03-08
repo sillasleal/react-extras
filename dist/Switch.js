@@ -7,6 +7,10 @@ exports.Default = exports.Case = exports.Switch = void 0;
 
 var _react = require("react");
 
+var _ComponentBase3 = _interopRequireDefault(require("./ComponentBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -26,8 +30,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-/**/
 
 /**
  * Description of Switch
@@ -105,8 +107,8 @@ exports.Switch = Switch;
 
 var Case =
 /*#__PURE__*/
-function (_Component2) {
-  _inherits(Case, _Component2);
+function (_ComponentBase) {
+  _inherits(Case, _ComponentBase);
 
   function Case() {
     _classCallCheck(this, Case);
@@ -114,19 +116,8 @@ function (_Component2) {
     return _possibleConstructorReturn(this, _getPrototypeOf(Case).apply(this, arguments));
   }
 
-  _createClass(Case, [{
-    key: "render",
-    value: function render() {
-      if (typeof this.props.children === 'function') {
-        return this.props.children();
-      } else {
-        return this.props.children;
-      }
-    }
-  }]);
-
   return Case;
-}(_react.Component);
+}(_ComponentBase3.default);
 
 exports.Case = Case;
 
@@ -136,8 +127,8 @@ _defineProperty(Case, "defaultProps", {
 
 var Default =
 /*#__PURE__*/
-function (_Component3) {
-  _inherits(Default, _Component3);
+function (_ComponentBase2) {
+  _inherits(Default, _ComponentBase2);
 
   function Default() {
     _classCallCheck(this, Default);
@@ -145,19 +136,8 @@ function (_Component3) {
     return _possibleConstructorReturn(this, _getPrototypeOf(Default).apply(this, arguments));
   }
 
-  _createClass(Default, [{
-    key: "render",
-    value: function render() {
-      if (typeof this.props.children === 'function') {
-        return this.props.children();
-      } else {
-        return this.props.children;
-      }
-    }
-  }]);
-
   return Default;
-}(_react.Component);
+}(_ComponentBase3.default);
 
 exports.Default = Default;
 
