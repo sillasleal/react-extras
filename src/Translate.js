@@ -51,6 +51,11 @@ export class TranslateProvider extends Component {
         this.setDictionary(this.props.dictionary);
     }
 
+    /**
+     * Método que define o idioma
+     * @param {String} language O idioma a ser definido
+     * @returns {null}
+     */
     setLang(language) {
         if (String.isValid(language)) {
             this.setState({
@@ -66,6 +71,12 @@ export class TranslateProvider extends Component {
         return null;
     }
 
+    /**
+     * Método que define o dicionário
+     * @param {object} dictionary O dicionário
+     * @param {String} language (Opcional)O idioma do dicionário
+     * @returns {undefined}
+     */
     setDictionary(dictionary, language) {
         if (!Object.isObject(dictionary)) {
             return console.error("Dictionary need to be a object: ", dictionary);
@@ -85,6 +96,14 @@ export class TranslateProvider extends Component {
         }
     }
 
+    /**
+     * Método que realiza a tradução da palavra para o idioma selecionado
+     * @param {String} key A chave referente a palavra
+     * @param {object} params Os parametros a serem inseridos na string ou usados para o plural
+     * @param {object} personalDict Um dicionário exclusivo da execução
+     * @param {String} personalLang O idioma especifico da execução
+     * @returns {newWord|TranslateProvider@call;translate|TranslateProvider.translate.key|String}
+     */
     translate(key, params = {}, personalDict, personalLang){
         if (String.isValid(key)) {
             //String
@@ -100,7 +119,10 @@ export class TranslateProvider extends Component {
                     Object.isObject(dictionaries[this.props.errorLanguage]) ?
                     dictionaries[this.props.errorLanguage] :
                     {};
-            const word = dictionary[key];
+            const dictCoringa = Object.isObject(dictionaries['*']) ?
+                    dictionaries['*'] :
+                    {};
+            const word = dictionary[key] || dictCoringa[key] || key;
             if (typeof word === 'function') {
                 newWord = word(language, dictionaries);
             } else if (typeof word === 'undefined') {

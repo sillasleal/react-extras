@@ -24,6 +24,7 @@
 
 import { Component, isValidElement } from "react";
 /**/
+import ComponentBase from './ComponentBase';
 
 /**
  * Description of Switch
@@ -71,30 +72,14 @@ export class Switch extends Component {
     }
 }
 
-export class Case extends Component {
+export class Case extends ComponentBase {
     static defaultProps = {
         name: 'case'
     }
-
-    render() {
-        if (typeof this.props.children === 'function') {
-            return this.props.children();
-        } else {
-            return this.props.children;
-        }
-    }
 }
 
-export class Default extends Component {
+export class Default extends ComponentBase {
     static defaultProps = {
         name: 'default'
-    }
-
-    render() {
-        if (typeof this.props.children === 'function') {
-            return this.props.children();
-        } else {
-            return this.props.children;
-        }
     }
 }
