@@ -105,26 +105,43 @@ export class TranslateProvider extends Component {
      * @returns {newWord|TranslateProvider@call;translate|TranslateProvider.translate.key|String}
      */
     translate(key, params = {}, personalDict, personalLang){
+        /*
+         *  LÓGICA
+         *  SE key é String:
+         *      #Verifica se personalLang é válida e usa esse idioma no método
+         *      #Verifica se existe um dicionário * e cria um dicionario local ao método
+         *      #Verifica se existe um dicionário * para o idioma usado, algo como pt-*, o que englobaria 'pt, pt-BR, pt-AN e etc' e o mescla ao resultado anterior para uso no método
+         *      #Verifica se o personalDict é valido, se for, o mescla com o dicionário global e o local criado anteriormente e o usa o resultado no método
+         *      #Verifica se as prorpiedades de params existem no valor associado a key e substitue na string final
+         *  CASE SE key é Array:
+         *      #Trata o caso 'plural'
+         *      #Verifica se o array possui três elementos
+         *      #Verifica se o ultimo elemento é uma propriedade de params
+         *      #Verifica se essa propriedade é 1
+         *      #Caso seja 1, chama o método novamente passando o primeiro elemento do array
+         *      #Caso contrário, chama o método novamente passando o segundo elemento do array
+         *  CASE CONTRÁRIO:
+         *      Exibe um erro
+         *      Retorna ''
+         */
         if (String.isValid(key)) {
             //String
             let newWord;
-            const language = String.isValid(personalLang) ?
-                    personalLang :
-                    this.state.language;
+            const {props:{errorLanguage}, state: {language}} = this;
+//            const {errorLanguage} = this.props;
+//            const {language} = this.state;
+            const localLang = String.isValid(personalLang) ? personalLang : language;
+            const langCoringa = localLang.indexOf('-') > -1 ? localLang.split('-')[0] : localLang;
             const dictionaries = Object.isObject(personalDict) ?
                     Object.assignDeep(this.state.dictionary, personalDict) :
                     {...this.state.dictionary};
-            const dictionary = Object.isObject(dictionaries[language]) ?
-                    dictionaries[language] :
-                    Object.isObject(dictionaries[this.props.errorLanguage]) ?
-                    dictionaries[this.props.errorLanguage] :
-                    {};
-            const dictCoringa = Object.isObject(dictionaries['*']) ?
-                    dictionaries['*'] :
-                    {};
-            const word = dictionary[key] || dictCoringa[key] || key;
+            const dictCoringa = Object.readProp(dictionaries, '*', {});
+            const dictCoringaLang = Object.readProp(dictionaries, `${langCoringa}-*`, {});
+            const dictionary = Object.readProp(dictionaries, localLang, Object.readProp(dictionaries, errorLanguage, {}));
+            const word = dictionary[key] || dictCoringaLang[key] || dictCoringa[key] || key;
+            /**/
             if (typeof word === 'function') {
-                newWord = word(language, dictionaries);
+                newWord = word(localLang, dictionaries) || '';
             } else if (typeof word === 'undefined') {
                 newWord = key;
             } else {
@@ -136,15 +153,16 @@ export class TranslateProvider extends Component {
                     newWord = newWord.replaceAll(`{${prop}}`, params[prop]);
                 }
             }
-            if (newWord.indexOf("{") > -1) {
-                const wordSplit = newWord.split("{");
-                for (var item in wordSplit) {
-                    const dictKey = wordSplit[item].substr(0, wordSplit[item].indexOf("}"));
-                    if (String.isValid(dictKey) && String.isValid(dictionary[dictKey])) {
-                        newWord = newWord.replaceAll(dictKey, dictionary[dictKey]);
-                    }
-                }
-            }
+            //ESTE TRECHO ESTA COM PROBLEMAS, DEVE SER IMPLEMENTADA UMA CHAMADA RECURSIVA QUE TROQUE TODAS AS CHAVES
+//            if (newWord.indexOf("{") > -1) {
+//                const wordSplit = newWord.split("{");
+//                for (var item in wordSplit) {
+//                    const dictKey = wordSplit[item].substr(0, wordSplit[item].indexOf("}"));
+//                    if (String.isValid(dictKey) && String.isValid(dictionary[dictKey])) {
+//                        newWord = newWord.replaceAll(dictKey, dictionary[dictKey]);
+//                    }
+//                }
+//            }
             /**/
             return newWord;
         } else if (Array.isArray(key)) {

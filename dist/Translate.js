@@ -140,17 +140,41 @@ function (_Component) {
       var personalDict = arguments.length > 2 ? arguments[2] : undefined;
       var personalLang = arguments.length > 3 ? arguments[3] : undefined;
 
+      /*
+       *  LÓGICA
+       *  SE key é String:
+       *      #Verifica se personalLang é válida e usa esse idioma no método
+       *      #Verifica se existe um dicionário * e cria um dicionario local ao método
+       *      #Verifica se existe um dicionário * para o idioma usado, algo como pt-*, o que englobaria 'pt, pt-BR, pt-AN e etc' e o mescla ao resultado anterior para uso no método
+       *      #Verifica se o personalDict é valido, se for, o mescla com o dicionário global e o local criado anteriormente e o usa o resultado no método
+       *      #Verifica se as prorpiedades de params existem no valor associado a key e substitue na string final
+       *  CASE SE key é Array:
+       *      #Trata o caso 'plural'
+       *      #Verifica se o array possui três elementos
+       *      #Verifica se o ultimo elemento é uma propriedade de params
+       *      #Verifica se essa propriedade é 1
+       *      #Caso seja 1, chama o método novamente passando o primeiro elemento do array
+       *      #Caso contrário, chama o método novamente passando o segundo elemento do array
+       *  CASE CONTRÁRIO:
+       *      Exibe um erro
+       *      Retorna ''
+       */
       if (String.isValid(key)) {
         //String
         var newWord;
-        var language = String.isValid(personalLang) ? personalLang : this.state.language;
+        var errorLanguage = this.props.errorLanguage;
+        var stateLang = this.state.language;
+        var language = String.isValid(personalLang) ? personalLang : stateLang;
+        var langCoringa = language.indexOf('-') > -1 ? language.split('-')[0] : language;
         var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(this.state.dictionary, personalDict) : _objectSpread({}, this.state.dictionary);
-        var dictionary = Object.isObject(dictionaries[language]) ? dictionaries[language] : Object.isObject(dictionaries[this.props.errorLanguage]) ? dictionaries[this.props.errorLanguage] : {};
-        var dictCoringa = Object.isObject(dictionaries['*']) ? dictionaries['*'] : {};
-        var word = dictionary[key] || dictCoringa[key] || key;
+        var dictCoringa = Object.readProp(dictionaries, '*', {});
+        var dictCoringaLang = Object.readProp(dictionaries, "".concat(langCoringa, "-*"), {});
+        var dictionary = Object.readProp(dictionaries, language, Object.readProp(dictionaries, errorLanguage, {}));
+        var word = dictionary[key] || dictCoringaLang[key] || dictCoringa[key] || key;
+        /**/
 
         if (typeof word === 'function') {
-          newWord = word(language, dictionaries);
+          newWord = word(language, dictionaries) || '';
         } else if (typeof word === 'undefined') {
           newWord = key;
         } else {
@@ -163,19 +187,17 @@ function (_Component) {
           for (var prop in params) {
             newWord = newWord.replaceAll("{".concat(prop, "}"), params[prop]);
           }
-        }
+        } //ESTE TRECHO ESTA COM PROBLEMAS, DEVE SER IMPLEMENTADA UMA CHAMADA RECURSIVA QUE TROQUE TODAS AS CHAVES
+        //            if (newWord.indexOf("{") > -1) {
+        //                const wordSplit = newWord.split("{");
+        //                for (var item in wordSplit) {
+        //                    const dictKey = wordSplit[item].substr(0, wordSplit[item].indexOf("}"));
+        //                    if (String.isValid(dictKey) && String.isValid(dictionary[dictKey])) {
+        //                        newWord = newWord.replaceAll(dictKey, dictionary[dictKey]);
+        //                    }
+        //                }
+        //            }
 
-        if (newWord.indexOf("{") > -1) {
-          var wordSplit = newWord.split("{");
-
-          for (var item in wordSplit) {
-            var dictKey = wordSplit[item].substr(0, wordSplit[item].indexOf("}"));
-
-            if (String.isValid(dictKey) && String.isValid(dictionary[dictKey])) {
-              newWord = newWord.replaceAll(dictKey, dictionary[dictKey]);
-            }
-          }
-        }
         /**/
 
 

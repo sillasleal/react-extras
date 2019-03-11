@@ -35,6 +35,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  * Description of IfComponent
  * @description text
  * @author Sillas S. Leal<sillas.santos.leal@accenture.com>
+ * @param {Array} args
  */
 var IfComponent =
 /*#__PURE__*/
@@ -65,7 +66,7 @@ function (_Component) {
             throw new Error("If have to be the first children in IfComponent");
           }
 
-          if (Number(item) === 0 && children[item].props.name === 'elseif') {
+          if (Number(item) === 0 && children[item].props.name === 'elseif' || Number(item) === 0 && children[item].props.name === 'else') {
             throw new Error("The first children of IfComponent have to be a If");
           }
 
@@ -85,6 +86,7 @@ function (_Component) {
 }(_react.Component);
 
 exports.IfComponent = IfComponent;
+;
 
 var If =
 /*#__PURE__*/
@@ -106,6 +108,8 @@ _defineProperty(If, "defaultProps", {
   name: 'if'
 });
 
+;
+
 var ElseIf =
 /*#__PURE__*/
 function (_ComponentBase2) {
@@ -126,6 +130,8 @@ _defineProperty(ElseIf, "defaultProps", {
   name: 'elseif'
 });
 
+;
+
 var Else =
 /*#__PURE__*/
 function (_ComponentBase3) {
@@ -145,3 +151,5 @@ exports.Else = Else;
 _defineProperty(Else, "defaultProps", {
   name: 'else'
 });
+
+;
