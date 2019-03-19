@@ -162,19 +162,21 @@ function (_Component) {
       if (String.isValid(key)) {
         //String
         var newWord;
-        var errorLanguage = this.props.errorLanguage;
-        var stateLang = this.state.language;
-        var language = String.isValid(personalLang) ? personalLang : stateLang;
-        var langCoringa = language.indexOf('-') > -1 ? language.split('-')[0] : language;
+        var errorLanguage = this.props.errorLanguage,
+            language = this.state.language; //            const {errorLanguage} = this.props;
+        //            const {language} = this.state;
+
+        var localLang = String.isValid(personalLang) ? personalLang : language;
+        var langCoringa = localLang.indexOf('-') > -1 ? localLang.split('-')[0] : localLang;
         var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(this.state.dictionary, personalDict) : _objectSpread({}, this.state.dictionary);
         var dictCoringa = Object.readProp(dictionaries, '*', {});
         var dictCoringaLang = Object.readProp(dictionaries, "".concat(langCoringa, "-*"), {});
-        var dictionary = Object.readProp(dictionaries, language, Object.readProp(dictionaries, errorLanguage, {}));
+        var dictionary = Object.readProp(dictionaries, localLang, Object.readProp(dictionaries, errorLanguage, {}));
         var word = dictionary[key] || dictCoringaLang[key] || dictCoringa[key] || key;
         /**/
 
         if (typeof word === 'function') {
-          newWord = word(language, dictionaries) || '';
+          newWord = word(localLang, dictionaries) || '';
         } else if (typeof word === 'undefined') {
           newWord = key;
         } else {

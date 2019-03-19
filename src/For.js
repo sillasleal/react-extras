@@ -1,17 +1,28 @@
-import {createElement, memo} from 'react';
+import React from 'react';
 /**/
 
 
-const testCache = (prev, next) => JSON.stringify(prev) !== JSON.stringify(next);
 /**
  * Component For
  * @description text
  * @author Sillas S. Leal<sillas.santos.leal@accenture.com>
  */
-export default memo(({children, of: inArray, to: each="children"}) => inArray.map((item, key) => {
-        if (typeof children === 'function') {
-            return children(item, key);
+export default ({children, of: inArray, to: each = "children"}) => {
+    if (typeof children === 'function') {
+        return inArray.map(children);
+    } else {
+        const Cpm = children.type;
+        if (each === 'children') {
+            return inArray.map((item, key) => <Cpm key={key}>{item}</Cpm>);
         } else {
-            return createElement(children.type, {key, [each]: item}, null, each === 'children' ? item : null);
+            return inArray.map((item, key) => {
+                const props = {
+                    key,
+                    [each]: item
+                };
+                /**/
+                return <Cpm {...props} />;
+            });
         }
-    }), testCache);
+}
+}
