@@ -143,11 +143,61 @@ The code above will create a list of H1 with 5 numbers. The props **to** define 
 ```
 
 ### ForProps
-
 Prop Name      | Type                | Required  | Obs
 -------------- | ------------------- | --------- | ---
 of             | Array               | YES       | The list of itens
 to             | String              | NO        | The name of props target in child componet. If you want to insert the array item in the props "title" on child component, the value of the props **to** have to be "title".
 children       | Element \| Function | NO        | If it is an Element, this will be rendered, if it is a function, this function will be executed and its return will be rendered. This function receive each item of Array and a key, like map method.
+
+### Switch
+
+The Switch component is similar to javascript switch. It has a similar syntax and work like a real switch. It element has two sub-components, Case and Default, both work like real case and default in switch/case. Look below a exemple os use:
+
+```javascript
+    const Title = (props) => <h1>{props.text}</h1>;
+    const Switch = () =>  <Switch value={a}>
+        <Case value={1}>
+            <Title text="Value 1" />
+        </Case>
+        <Case value={2} break>
+            {() => <Title text="Value 2" />}
+        </Case>
+        <Default>
+            <Title text="Default value" />
+        </Defaut>
+    </Switch>
+```
+
+### Case
+
+The case element works like a real javascript case. You need to set props value, this props will be used to test the switch value. You can set too the break props to stop test values in others cases in switch.
+
+```javascript
+    const Title = (props) => <h1>{props.text}</h1>;
+    const Switch = () =>  <Switch value={a}>
+        <Case value={1}>
+            <Title text="Without break" />
+        </Case>
+        <Case value={2}>
+            <Title text="Other without break" />
+        </Case>
+         <Case value={3} break>
+            <Title text="with break" />
+        </Case>
+    </Switch>
+```
+
+### Default
+
+The default component of switch is used to render the element if no one other test pass in case.
+
+### SwitchProps
+
+Prop Name      | In            |  Type               | Required  | Obs
+-------------- | ------------- |-------------------- | --------- | ---
+value          | Switch        | mixed               | YES       | The value to be used to test in case elements
+value          | Case          | mixed               | YES       | The value used to test with switch value
+break          | Case          | boolean             | NO        | Used to break the tests
+children       | Case\|Default | Element \| Function | YES       | The element to be render
 
 ### License MIT
