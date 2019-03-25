@@ -16,8 +16,7 @@
     - [Case](#case)
     - [Default](#default)
     - [SwitchProps](#switchprops)
- - [Container](#container)
-
+ 
 ### Instalation
 
 To install this lib use the command below:
@@ -232,25 +231,5 @@ value          | Switch        | mixed               | YES       | The value to 
 value          | Case          | mixed               | YES       | The value used to test with switch value
 break          | Case          | boolean             | NO        | Used to break the tests
 children       | Case\|Default | Element \| Function | YES       | The element to be render
-
-### Container
-
-The Container component allow that you insert many components without a div or span to involve they. For exemple, if you need to print 5 divs inside a ternary, in normal case you will put a div or span, or other component, and when the ternary is processed, the component will have a div and other inside. With Container this not happen.
-
-```javascript
-    const Switch = () =>  <Container>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-    </Container>
-```
-
-The code above will create a virtual dom like this:
-
-```html
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-```
 
 ### License MIT
