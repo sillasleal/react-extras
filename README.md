@@ -1,6 +1,6 @@
-# @ssl/react-extras
+# @ssl-lib/react-extras
 
-*@ssl/react-extras* is a library of components that allow the developer to create logic inside of JSX.
+*@ssl-lib/react-extras* is a library of components that allow the developer to create logic inside of JSX.
 
 ## List of conntents
 
@@ -23,7 +23,7 @@
 To install this lib use the command below:
 
 ```
-    npm install --save @ssl/react-extras
+    npm install --save @ssl-lib/react-extras
 ```
 
 ### IfComponent
