@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _react = require("react");
 
@@ -50,4 +50,4 @@ function (_Component) {
   return ComponentBase;
 }(_react.Component);
 
-exports.default = ComponentBase;
+exports["default"] = ComponentBase;

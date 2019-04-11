@@ -30,7 +30,7 @@ Object.defineProperty(exports, "Else", {
 Object.defineProperty(exports, "For", {
   enumerable: true,
   get: function get() {
-    return _For.default;
+    return _For["default"];
   }
 });
 Object.defineProperty(exports, "TranslateProvider", {
@@ -69,6 +69,12 @@ Object.defineProperty(exports, "Default", {
     return _Switch.Default;
   }
 });
+Object.defineProperty(exports, "LifeCircleForPure", {
+  enumerable: true,
+  get: function get() {
+    return _LifeCircleForPure["default"];
+  }
+});
 
 var _IfComponent = require("./IfComponent");
 
@@ -78,4 +84,6 @@ var _Translate = require("./Translate");
 
 var _Switch = require("./Switch");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _LifeCircleForPure = _interopRequireDefault(require("./LifeCircleForPure"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }

@@ -9,7 +9,7 @@ var _react = require("react");
 
 var _ComponentBase3 = _interopRequireDefault(require("./ComponentBase"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -73,7 +73,7 @@ function (_Component) {
           if (children[item].props.value === value) {
             multReturn.push(children[item]);
 
-            if (children[item].props.break) {
+            if (children[item].props["break"]) {
               break;
             }
           }
@@ -117,7 +117,7 @@ function (_ComponentBase) {
   }
 
   return Case;
-}(_ComponentBase3.default);
+}(_ComponentBase3["default"]);
 
 exports.Case = Case;
 
@@ -137,7 +137,7 @@ function (_ComponentBase2) {
   }
 
   return Default;
-}(_ComponentBase3.default);
+}(_ComponentBase3["default"]);
 
 exports.Default = Default;
 

@@ -9,9 +9,9 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -241,7 +241,7 @@ function (_Component) {
       };
       /**/
 
-      return _react.default.createElement(Provider, {
+      return _react["default"].createElement(Provider, {
         value: value
       }, this.props.children);
     }
@@ -253,9 +253,9 @@ function (_Component) {
 exports.TranslateProvider = TranslateProvider;
 
 _defineProperty(TranslateProvider, "propTypes", {
-  dictionary: _propTypes.default.object,
-  language: _propTypes.default.string,
-  errorLanguage: _propTypes.default.string.isRequired
+  dictionary: _propTypes["default"].object,
+  language: _propTypes["default"].string,
+  errorLanguage: _propTypes["default"].string.isRequired
 });
 
 var Translate = function Translate(_ref) {
@@ -263,12 +263,12 @@ var Translate = function Translate(_ref) {
       params = _ref.params,
       dictionary = _ref.dictionary,
       lang = _ref.lang;
-  return typeof children === 'function' ? _react.default.createElement(Consumer, null, function (_ref2) {
+  return typeof children === 'function' ? _react["default"].createElement(Consumer, null, function (_ref2) {
     var translate = _ref2.translate;
     return children(function (k, o) {
       return translate(k, o, dictionary, lang);
     });
-  }) : _react.default.createElement(Consumer, null, function (_ref3) {
+  }) : _react["default"].createElement(Consumer, null, function (_ref3) {
     var translate = _ref3.translate;
     return translate(children, params);
   });
@@ -278,10 +278,10 @@ exports.Translate = Translate;
 
 var SetLang = function SetLang(_ref4) {
   var children = _ref4.children;
-  return typeof children === 'function' ? _react.default.createElement(Consumer, null, function (_ref5) {
+  return typeof children === 'function' ? _react["default"].createElement(Consumer, null, function (_ref5) {
     var setLang = _ref5.setLang;
     return children(setLang);
-  }) : _react.default.createElement(Consumer, null, function (_ref6) {
+  }) : _react["default"].createElement(Consumer, null, function (_ref6) {
     var setLang = _ref6.setLang;
     return setLang(children);
   });

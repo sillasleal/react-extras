@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -31,7 +31,7 @@ var _default = function _default(_ref) {
 
     if (each === 'children') {
       return inArray.map(function (item, key) {
-        return _react.default.createElement(Cpm, {
+        return _react["default"].createElement(Cpm, {
           key: key
         }, item);
       });
@@ -43,10 +43,10 @@ var _default = function _default(_ref) {
         /**/
 
 
-        return _react.default.createElement(Cpm, props);
+        return _react["default"].createElement(Cpm, props);
       });
     }
   }
 };
 
-exports.default = _default;
+exports["default"] = _default;

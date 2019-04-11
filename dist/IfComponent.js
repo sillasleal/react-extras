@@ -9,7 +9,7 @@ var _react = require("react");
 
 var _ComponentBase4 = _interopRequireDefault(require("./ComponentBase"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -100,7 +100,7 @@ function (_ComponentBase) {
   }
 
   return If;
-}(_ComponentBase4.default);
+}(_ComponentBase4["default"]);
 
 exports.If = If;
 
@@ -122,7 +122,7 @@ function (_ComponentBase2) {
   }
 
   return ElseIf;
-}(_ComponentBase4.default);
+}(_ComponentBase4["default"]);
 
 exports.ElseIf = ElseIf;
 
@@ -144,7 +144,7 @@ function (_ComponentBase3) {
   }
 
   return Else;
-}(_ComponentBase4.default);
+}(_ComponentBase4["default"]);
 
 exports.Else = Else;
 

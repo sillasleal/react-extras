@@ -421,6 +421,7 @@ export default class MapTrack extends Component {
                         lng: response.routes[0].overview_path[item].lng()
                     });
                 }
+                console.log(this.overviewPath);
 //            } else if (status === 'ZERO_RESULTS') {
 //                if (this.map) {
 //                    this.map.setCenter(this.destination);
