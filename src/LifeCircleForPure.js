@@ -101,7 +101,9 @@ export default class LifeCircleForPure extends Component {
 
     render() {
         if (typeof this.props.children === 'function') {
-            return this.props.children();
+            return this.props.children({
+                setState: this.setState.bind(this)
+            });
         } else {
             return this.props.children;
         }
