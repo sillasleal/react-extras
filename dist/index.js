@@ -27,10 +27,10 @@ Object.defineProperty(exports, "Else", {
     return _IfComponent.Else;
   }
 });
-Object.defineProperty(exports, "For", {
+Object.defineProperty(exports, "ForEach", {
   enumerable: true,
   get: function get() {
-    return _For["default"];
+    return _ForEach["default"];
   }
 });
 Object.defineProperty(exports, "TranslateProvider", {
@@ -49,6 +49,18 @@ Object.defineProperty(exports, "SetLang", {
   enumerable: true,
   get: function get() {
     return _Translate.SetLang;
+  }
+});
+Object.defineProperty(exports, "AppendDicionary", {
+  enumerable: true,
+  get: function get() {
+    return _Translate.AppendDicionary;
+  }
+});
+Object.defineProperty(exports, "TranslateContext", {
+  enumerable: true,
+  get: function get() {
+    return _Translate.TranslateContext;
   }
 });
 Object.defineProperty(exports, "Switch", {
@@ -76,9 +88,11 @@ Object.defineProperty(exports, "LifeCircleForPure", {
   }
 });
 
+require("@ssl-lib/react-extras");
+
 var _IfComponent = require("./IfComponent");
 
-var _For = _interopRequireDefault(require("./For"));
+var _ForEach = _interopRequireDefault(require("./ForEach"));
 
 var _Translate = require("./Translate");
 

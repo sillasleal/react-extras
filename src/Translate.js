@@ -22,14 +22,16 @@
  * THE SOFTWARE.
  */
 
+import "@ssl-lib/js-extras";
 import React, {Component, createContext} from "react";
 import PropTypes from 'prop-types';
 /**/
 
 const defaultLang = 'pt-BR';
-const {Consumer, Provider} = createContext({
+const TranslateContext = createContext({
     language: defaultLang
 });
+const { Consumer, Provider } = TranslateContext;
 
 export class TranslateProvider extends Component {
     static propTypes = {
@@ -41,7 +43,7 @@ export class TranslateProvider extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dictionary: {},
+            dictionary: { },
             language: defaultLang
         };
     }
@@ -86,14 +88,30 @@ export class TranslateProvider extends Component {
             this.setState(state => ({
                     dictionary: {
                         ...state.dictionary,
-                        [language]: {...dictionary}
+                        [language]: { ...dictionary }
                     }
                 }));
         } else {
             this.setState({
-                dictionary: {...dictionary}
+                dictionary: { ...dictionary }
             });
         }
+    }
+
+    /**
+     * Método que concatena um novo dicionário ao dicionary existente
+     * @param {object} newDictionary O novo dicionário
+     * @return {undefined}
+     */
+    appendDictionary(newDictionary) {
+        if (Object.isObject(newDictionary)) {
+            this.setState(state => ({
+                    dictionary: Object.assignDeep(state.dictionary, newDictionary)
+                }));
+        } else {
+            console.error('dictionary need to be a object');
+        }
+        return null;
     }
 
     /**
@@ -124,31 +142,34 @@ export class TranslateProvider extends Component {
          *      Exibe um erro
          *      Retorna ''
          */
-        if (String.isValid(key)) {
+        if (typeof key === 'string') {
+            if (!String.isValid(key)) {
+                return '';
+            }
             //String
             let newWord;
-            const {props:{errorLanguage}, state: {language}} = this;
+            const { props: { errorLanguage }, state: { language } } = this;
 //            const {errorLanguage} = this.props;
 //            const {language} = this.state;
             const localLang = String.isValid(personalLang) ? personalLang : language;
             const langCoringa = localLang.indexOf('-') > -1 ? localLang.split('-')[0] : localLang;
             const dictionaries = Object.isObject(personalDict) ?
                     Object.assignDeep(this.state.dictionary, personalDict) :
-                    {...this.state.dictionary};
-            const dictCoringa = Object.readProp(dictionaries, '*', {});
-            const dictCoringaLang = Object.readProp(dictionaries, `${langCoringa}-*`, {});
-            const dictionary = Object.readProp(dictionaries, localLang, Object.readProp(dictionaries, errorLanguage, {}));
+                    { ...this.state.dictionary };
+            const dictCoringa = Object.readProp(dictionaries, '*', { });
+            const dictCoringaLang = Object.readProp(dictionaries, `${langCoringa}-*`, { });
+            const dictionary = Object.readProp(dictionaries, localLang, Object.readProp(dictionaries, errorLanguage, { }));
             const word = dictionary[key] || dictCoringaLang[key] || dictCoringa[key] || key;
             /**/
             if (typeof word === 'function') {
-                newWord = word(localLang, dictionaries) || '';
+                newWord = word(params, dictionaries, localLang) || '';
             } else if (typeof word === 'undefined') {
                 newWord = key;
             } else {
                 newWord = `${word}`;
             }
             /**/
-            if (Object.isObject(params)) {
+            if (Object.isObject(params) && String.isValid(newWord)) {
                 for (var prop in params) {
                     newWord = newWord.replaceAll(`{${prop}}`, params[prop]);
                 }
@@ -192,7 +213,8 @@ export class TranslateProvider extends Component {
             language: this.state.language,
             dictionary: this.state.dictionary,
             translate: this.translate.bind(this),
-            setLang: this.setLang.bind(this)
+            setLang: this.setLang.bind(this),
+            appendDictionary: this.appendDictionary.bind(this)
         };
         /**/
         return <Provider value={value}>{this.props.children}</Provider>;
@@ -206,3 +228,11 @@ export const Translate = ({children, params, dictionary, lang}) => typeof childr
 export const SetLang = ({children}) => typeof children === 'function' ?
             <Consumer>{({setLang}) => children(setLang)}</Consumer> :
             <Consumer>{({setLang}) => setLang(children)}</Consumer>;
+
+export const AppendDicionary = ({dictionary, children}) => <Consumer>{({appendDictionary}) => {
+                    appendDictionary(dictionary);
+                    /**/
+                    return children ? children : null;
+            }}</Consumer>;
+
+export { TranslateContext };

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SetLang = exports.Translate = exports.TranslateProvider = void 0;
+exports.TranslateContext = exports.AppendDicionary = exports.SetLang = exports.Translate = exports.TranslateProvider = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -37,12 +37,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /**/
 var defaultLang = 'pt-BR';
-
-var _createContext = (0, _react.createContext)({
+var TranslateContext = (0, _react.createContext)({
   language: defaultLang
-}),
-    Consumer = _createContext.Consumer,
-    Provider = _createContext.Provider;
+});
+exports.TranslateContext = TranslateContext;
+var Consumer = TranslateContext.Consumer,
+    Provider = TranslateContext.Provider;
 
 var TranslateProvider =
 /*#__PURE__*/
@@ -125,6 +125,27 @@ function (_Component) {
       }
     }
     /**
+     * Método que concatena um novo dicionário ao dicionary existente
+     * @param {object} newDictionary O novo dicionário
+     * @return {undefined}
+     */
+
+  }, {
+    key: "appendDictionary",
+    value: function appendDictionary(newDictionary) {
+      if (Object.isObject(newDictionary)) {
+        this.setState(function (state) {
+          return {
+            dictionary: Object.assignDeep(state.dictionary, newDictionary)
+          };
+        });
+      } else {
+        console.error('dictionary need to be a object');
+      }
+
+      return null;
+    }
+    /**
      * Método que realiza a tradução da palavra para o idioma selecionado
      * @param {String} key A chave referente a palavra
      * @param {object} params Os parametros a serem inseridos na string ou usados para o plural
@@ -159,8 +180,12 @@ function (_Component) {
        *      Exibe um erro
        *      Retorna ''
        */
-      if (String.isValid(key)) {
-        //String
+      if (typeof key === 'string') {
+        if (!String.isValid(key)) {
+          return '';
+        } //String
+
+
         var newWord;
         var errorLanguage = this.props.errorLanguage,
             language = this.state.language; //            const {errorLanguage} = this.props;
@@ -176,7 +201,7 @@ function (_Component) {
         /**/
 
         if (typeof word === 'function') {
-          newWord = word(localLang, dictionaries) || '';
+          newWord = word(params, dictionaries, localLang) || '';
         } else if (typeof word === 'undefined') {
           newWord = key;
         } else {
@@ -185,7 +210,7 @@ function (_Component) {
         /**/
 
 
-        if (Object.isObject(params)) {
+        if (Object.isObject(params) && String.isValid(newWord)) {
           for (var prop in params) {
             newWord = newWord.replaceAll("{".concat(prop, "}"), params[prop]);
           }
@@ -237,7 +262,8 @@ function (_Component) {
         language: this.state.language,
         dictionary: this.state.dictionary,
         translate: this.translate.bind(this),
-        setLang: this.setLang.bind(this)
+        setLang: this.setLang.bind(this),
+        appendDictionary: this.appendDictionary.bind(this)
       };
       /**/
 
@@ -288,3 +314,17 @@ var SetLang = function SetLang(_ref4) {
 };
 
 exports.SetLang = SetLang;
+
+var AppendDicionary = function AppendDicionary(_ref7) {
+  var dictionary = _ref7.dictionary,
+      children = _ref7.children;
+  return _react["default"].createElement(Consumer, null, function (_ref8) {
+    var appendDictionary = _ref8.appendDictionary;
+    appendDictionary(dictionary);
+    /**/
+
+    return children ? children : null;
+  });
+};
+
+exports.AppendDicionary = AppendDicionary;

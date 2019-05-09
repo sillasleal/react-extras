@@ -87,17 +87,17 @@ export default class LifeCircleForPure extends Component {
         this.props.componentDidCatch(error, info);
     }
     
-    UNSAFE_componentWillMount(){
-        this.props.componentWillMount();
-    }
-    
-    UNSAFE_componentWillReceiveProps(nextProps){
-        this.props.componentWillReceiveProps(nextProps);
-    }
-    
-    UNSAFE_componentWillUpdate(nextProps, nextState) {
-        this.props.componentWillUpdate(nextProps, nextState);
-    }
+//    UNSAFE_componentWillMount(){
+//        this.props.componentWillMount();
+//    }
+//    
+//    UNSAFE_componentWillReceiveProps(nextProps){
+//        this.props.componentWillReceiveProps(nextProps);
+//    }
+//    
+//    UNSAFE_componentWillUpdate(nextProps, nextState) {
+//        this.props.componentWillUpdate(nextProps, nextState);
+//    }
 
     render() {
         if (typeof this.props.children === 'function') {

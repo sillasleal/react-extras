@@ -22,16 +22,17 @@
  * THE SOFTWARE.
  */
 
-import {IfComponent, If, ElseIf, Else} from './IfComponent';
-import For from './For';
-import {TranslateProvider, Translate, SetLang} from './Translate';
-import {Switch, Case, Default} from './Switch';
+import "@ssl-lib/js-extras";
+import { IfComponent, If, ElseIf, Else } from './IfComponent';
+import ForEach from './ForEach';
+import { TranslateProvider, Translate, SetLang, AppendDicionary, TranslateContext } from './Translate';
+import { Switch, Case, Default } from './Switch';
 import LifeCircleForPure from './LifeCircleForPure';
 /**/
 export {
     IfComponent, If, ElseIf, Else,
-    For,
-    TranslateProvider, Translate, SetLang,
+    ForEach,
+    TranslateProvider, Translate, SetLang, AppendDicionary, TranslateContext,
     Switch, Case, Default,
     LifeCircleForPure
 };
