@@ -78,10 +78,10 @@ export default class LifeCircleForPure extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.shouldComponentUpdate(nextProps, nextState);
     }
-    
-    getSnapshotBeforeUpdate(prevProps, prevState) {
-        this.props.getSnapshotBeforeUpdate(prevProps, prevState);
-    }
+//    
+//    getSnapshotBeforeUpdate(prevProps, prevState) {
+//        this.props.getSnapshotBeforeUpdate(prevProps, prevState);
+//    }
     
     componentDidCatch(error, info) {
         this.props.componentDidCatch(error, info);

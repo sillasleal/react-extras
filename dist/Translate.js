@@ -3,7 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TranslateContext = exports.AppendDicionary = exports.SetLang = exports.Translate = exports.TranslateProvider = void 0;
+exports.TranslateContext = exports.AppendDicionary = exports.InjectTranslate = exports.SetLang = exports.Translate = exports.TranslateProvider = void 0;
+
+require("@ssl-lib/js-extras");
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -15,7 +17,17 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if (i % 2) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } else { Object.defineProperties(target, Object.getOwnPropertyDescriptors(arguments[i])); } } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -57,7 +69,8 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(TranslateProvider).call(this, props));
     _this.state = {
       dictionary: {},
-      language: defaultLang
+      language: defaultLang,
+      languages: []
     };
     return _this;
   }
@@ -65,29 +78,31 @@ function (_Component) {
   _createClass(TranslateProvider, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
-
-      this.setLang(this.props.language, function () {
-        return _this2.forceUpdate();
-      });
+      this.setLang(this.props.language);
       this.setDictionary(this.props.dictionary);
     }
     /**
      * Método que define o idioma
      * @param {String} language O idioma a ser definido
+     * @param {Array} languages Lista de idiomas padrão
      * @returns {null}
      */
 
   }, {
     key: "setLang",
     value: function setLang(language) {
+      var languages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
       if (String.isValid(language)) {
         this.setState({
-          language: language
+          language: language,
+          languages: Array.isArray(languages) ? languages.filter(function (i) {
+            return String.isValid(i);
+          }) : []
         });
       } else if (typeof language === 'undefined') {
         //Detect the browser language
-        this.setLang(Object.readProp(window, 'navigator.language', 'pt-BR'));
+        this.setLang(Object.readProp(window, 'navigator.language', this.props.errorLanguage), Object.readProp(window, 'navigator.languages', []));
       } else {
         console.error('Invalid language, language need to be a String or undefined:', language);
       }
@@ -98,7 +113,7 @@ function (_Component) {
     }
     /**
      * Método que define o dicionário
-     * @param {object} dictionary O dicionário
+     * @param {object|Promise} dictionary O dicionário ou Promise que entregará o dicionário
      * @param {String} language (Opcional)O idioma do dicionário
      * @returns {undefined}
      */
@@ -106,22 +121,30 @@ function (_Component) {
   }, {
     key: "setDictionary",
     value: function setDictionary(dictionary, language) {
+      var _this2 = this;
+
       if (!Object.isObject(dictionary)) {
         return console.error("Dictionary need to be a object: ", dictionary);
       }
       /**/
 
 
-      if (String.isValid(language)) {
-        this.setState(function (state) {
-          return {
-            dictionary: _objectSpread({}, state.dictionary, _defineProperty({}, language, _objectSpread({}, dictionary)))
-          };
+      if (dictionary instanceof Promise) {
+        dictionary.then(function (s) {
+          return _this2.setDictionary(s);
         });
       } else {
-        this.setState({
-          dictionary: _objectSpread({}, dictionary)
-        });
+        if (String.isValid(language)) {
+          this.setState(function (state) {
+            return {
+              dictionary: _objectSpread({}, state.dictionary, _defineProperty({}, language, _objectSpread({}, dictionary)))
+            };
+          });
+        } else {
+          this.setState({
+            dictionary: _objectSpread({}, dictionary)
+          });
+        }
       }
     }
     /**
@@ -182,23 +205,51 @@ function (_Component) {
        */
       if (typeof key === 'string') {
         if (!String.isValid(key)) {
+          console.error('key need to be a string!');
           return '';
         } //String
 
 
-        var newWord;
         var errorLanguage = this.props.errorLanguage,
-            language = this.state.language; //            const {errorLanguage} = this.props;
-        //            const {language} = this.state;
-
-        var localLang = String.isValid(personalLang) ? personalLang : language;
-        var langCoringa = localLang.indexOf('-') > -1 ? localLang.split('-')[0] : localLang;
-        var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(this.state.dictionary, personalDict) : _objectSpread({}, this.state.dictionary);
+            _this$state = this.state,
+            language = _this$state.language,
+            languages = _this$state.languages,
+            dictionary = _this$state.dictionary;
+        var newWord,
+            languagesArray = [].concat(_toConsumableArray(languages), [errorLanguage]);
+        var dictionaries = Object.isObject(personalDict) ? Object.assignDeep(dictionary, personalDict) : _objectSpread({}, dictionary);
         var dictCoringa = Object.readProp(dictionaries, '*', {});
-        var dictCoringaLang = Object.readProp(dictionaries, "".concat(langCoringa, "-*"), {});
-        var dictionary = Object.readProp(dictionaries, localLang, Object.readProp(dictionaries, errorLanguage, {}));
-        var word = dictionary[key] || dictCoringaLang[key] || dictCoringa[key] || key;
+        /* Buscando a palavra nos diversos dicionários */
+
+        if (String.isValid(language)) {
+          languagesArray = [language].concat(_toConsumableArray(languagesArray));
+        }
+
+        if (String.isValid(personalLang)) {
+          languagesArray = [personalLang].concat(_toConsumableArray(languagesArray));
+        }
+
+        languagesArray = _toConsumableArray(new Set(languagesArray));
+        var langOfCoringa, dictOfCoringaLang, dictionaryOfLang, word;
+
+        for (var i = 0; i < languagesArray.length; i++) {
+          if (String.isValid(languagesArray[i])) {
+            langOfCoringa = languagesArray[i].indexOf('-') > -1 ? languagesArray[i].split('-')[0] : languagesArray[i];
+            dictOfCoringaLang = Object.readProp(dictionaries, "".concat(langOfCoringa, "-*"), {});
+            dictionaryOfLang = Object.readProp(dictionaries, languagesArray[i], {});
+            word = dictionaryOfLang[key] || dictOfCoringaLang[key] || dictCoringa[key];
+
+            if (word) {
+              break;
+            }
+          }
+        }
+
+        if (!word) {
+          word = "".concat(key);
+        }
         /**/
+
 
         if (typeof word === 'function') {
           newWord = word(params, dictionaries, localLang) || '';
@@ -315,11 +366,26 @@ var SetLang = function SetLang(_ref4) {
 
 exports.SetLang = SetLang;
 
-var AppendDicionary = function AppendDicionary(_ref7) {
-  var dictionary = _ref7.dictionary,
-      children = _ref7.children;
-  return _react["default"].createElement(Consumer, null, function (_ref8) {
-    var appendDictionary = _ref8.appendDictionary;
+var InjectTranslate = function InjectTranslate(Cpm, dictionary) {
+  return function (props) {
+    return _react["default"].createElement(Consumer, null, function (_ref7) {
+      var _translate = _ref7.translate;
+      return _react["default"].createElement(Cpm, _extends({}, props, {
+        translate: function translate(a, b) {
+          return _translate(a, b, dictionary);
+        }
+      }));
+    });
+  };
+};
+
+exports.InjectTranslate = InjectTranslate;
+
+var AppendDicionary = function AppendDicionary(_ref8) {
+  var dictionary = _ref8.dictionary,
+      children = _ref8.children;
+  return _react["default"].createElement(Consumer, null, function (_ref9) {
+    var appendDictionary = _ref9.appendDictionary;
     appendDictionary(dictionary);
     /**/
 

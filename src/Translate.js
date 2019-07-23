@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+/* global Promise */
+
 import "@ssl-lib/js-extras";
 import React, {Component, createContext} from "react";
 import PropTypes from 'prop-types';
@@ -44,28 +46,31 @@ export class TranslateProvider extends Component {
         super(props);
         this.state = {
             dictionary: { },
-            language: defaultLang
+            language: defaultLang,
+            languages: []
         };
     }
 
     componentDidMount() {
-        this.setLang(this.props.language, () => this.forceUpdate());
+        this.setLang(this.props.language);
         this.setDictionary(this.props.dictionary);
     }
 
     /**
      * Método que define o idioma
      * @param {String} language O idioma a ser definido
+     * @param {Array} languages Lista de idiomas padrão
      * @returns {null}
      */
-    setLang(language) {
+    setLang(language, languages = []) {
         if (String.isValid(language)) {
             this.setState({
-                language
+                language,
+                languages: Array.isArray(languages) ? languages.filter(i => String.isValid(i)) : []
             });
         } else if (typeof language === 'undefined') {
             //Detect the browser language
-            this.setLang(Object.readProp(window, 'navigator.language', 'pt-BR'));
+            this.setLang(Object.readProp(window, 'navigator.language', this.props.errorLanguage), Object.readProp(window, 'navigator.languages', []));
         } else {
             console.error('Invalid language, language need to be a String or undefined:', language);
         }
@@ -75,7 +80,7 @@ export class TranslateProvider extends Component {
 
     /**
      * Método que define o dicionário
-     * @param {object} dictionary O dicionário
+     * @param {object|Promise} dictionary O dicionário ou Promise que entregará o dicionário
      * @param {String} language (Opcional)O idioma do dicionário
      * @returns {undefined}
      */
@@ -84,17 +89,21 @@ export class TranslateProvider extends Component {
             return console.error("Dictionary need to be a object: ", dictionary);
         }
         /**/
-        if (String.isValid(language)) {
-            this.setState(state => ({
-                    dictionary: {
-                        ...state.dictionary,
-                        [language]: { ...dictionary }
-                    }
-                }));
-        } else {
-            this.setState({
-                dictionary: { ...dictionary }
-            });
+        if(dictionary instanceof Promise){
+            dictionary.then(s => this.setDictionary(s));
+        } else{
+            if (String.isValid(language)) {
+                this.setState(state => ({
+                        dictionary: {
+                            ...state.dictionary,
+                            [language]: { ...dictionary }
+                        }
+                    }));
+            } else {
+                this.setState({
+                    dictionary: { ...dictionary }
+                });
+            }
         }
     }
 
@@ -144,22 +153,37 @@ export class TranslateProvider extends Component {
          */
         if (typeof key === 'string') {
             if (!String.isValid(key)) {
+                console.error('key need to be a string!');
                 return '';
             }
             //String
-            let newWord;
-            const { props: { errorLanguage }, state: { language } } = this;
-//            const {errorLanguage} = this.props;
-//            const {language} = this.state;
-            const localLang = String.isValid(personalLang) ? personalLang : language;
-            const langCoringa = localLang.indexOf('-') > -1 ? localLang.split('-')[0] : localLang;
-            const dictionaries = Object.isObject(personalDict) ?
-                    Object.assignDeep(this.state.dictionary, personalDict) :
-                    { ...this.state.dictionary };
+            const { props: { errorLanguage }, state: { language, languages, dictionary } } = this;
+            let newWord, languagesArray = [...languages, errorLanguage];
+            const dictionaries = Object.isObject(personalDict) ? Object.assignDeep(dictionary, personalDict) : { ...dictionary };
             const dictCoringa = Object.readProp(dictionaries, '*', { });
-            const dictCoringaLang = Object.readProp(dictionaries, `${langCoringa}-*`, { });
-            const dictionary = Object.readProp(dictionaries, localLang, Object.readProp(dictionaries, errorLanguage, { }));
-            const word = dictionary[key] || dictCoringaLang[key] || dictCoringa[key] || key;
+            /* Buscando a palavra nos diversos dicionários */
+            if(String.isValid(language)){
+                languagesArray = [language, ...languagesArray];
+            }
+            if(String.isValid(personalLang)){
+                languagesArray = [personalLang, ...languagesArray];
+            }
+            languagesArray = [...new Set(languagesArray)];
+            let langOfCoringa, dictOfCoringaLang, dictionaryOfLang, word;
+            for (var i = 0; i < languagesArray.length; i++) {
+                if(String.isValid(languagesArray[i])){
+                    langOfCoringa = languagesArray[i].indexOf('-') > -1 ? languagesArray[i].split('-')[0] : languagesArray[i];
+                    dictOfCoringaLang = Object.readProp(dictionaries, `${langOfCoringa}-*`, { });
+                    dictionaryOfLang = Object.readProp(dictionaries, languagesArray[i], { });
+                    word = dictionaryOfLang[key] || dictOfCoringaLang[key] || dictCoringa[key];
+                    if(word){
+                        break;
+                    }
+                }
+            }
+            if(!word){
+                word = `${key}`;
+            }
             /**/
             if (typeof word === 'function') {
                 newWord = word(params, dictionaries, localLang) || '';
@@ -228,6 +252,8 @@ export const Translate = ({children, params, dictionary, lang}) => typeof childr
 export const SetLang = ({children}) => typeof children === 'function' ?
             <Consumer>{({setLang}) => children(setLang)}</Consumer> :
             <Consumer>{({setLang}) => setLang(children)}</Consumer>;
+
+export const InjectTranslate = (Cpm, dictionary) => (props) => <Consumer>{({translate}) => <Cpm {...props} translate={(a, b) => translate(a, b, dictionary)}/>}</Consumer>;
 
 export const AppendDicionary = ({dictionary, children}) => <Consumer>{({appendDictionary}) => {
                     appendDictionary(dictionary);

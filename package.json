@@ -1,6 +1,6 @@
 {
     "name": "@ssl-lib/react-extras",
-    "version": "1.1.126",
+    "version": "1.1.130",
     "description": "",
     "main": "dist/index.js",
     "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",

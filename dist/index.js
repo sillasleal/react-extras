@@ -63,6 +63,12 @@ Object.defineProperty(exports, "TranslateContext", {
     return _Translate.TranslateContext;
   }
 });
+Object.defineProperty(exports, "InjectTranslate", {
+  enumerable: true,
+  get: function get() {
+    return _Translate.InjectTranslate;
+  }
+});
 Object.defineProperty(exports, "Switch", {
   enumerable: true,
   get: function get() {
@@ -88,7 +94,7 @@ Object.defineProperty(exports, "LifeCircleForPure", {
   }
 });
 
-require("@ssl-lib/react-extras");
+require("@ssl-lib/js-extras");
 
 var _IfComponent = require("./IfComponent");
 
