@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2018 Sillas S. Leal<sillas.s.leal@gmail.com>.
@@ -186,7 +186,7 @@ export class TranslateProvider extends Component {
             }
             /**/
             if (typeof word === 'function') {
-                newWord = word(params, dictionaries, localLang) || '';
+                newWord = word(params) || '';
             } else if (typeof word === 'undefined') {
                 newWord = key;
             } else {
