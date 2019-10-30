@@ -64,3 +64,4 @@ typings/
 /.bash_history
 /npm/
 /nbproject/private/
+/dist/
