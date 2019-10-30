@@ -15,7 +15,8 @@
         "dev": "nodemon --exec npm run build",
         "predeploy": "npm i",
         "prepublish": "npm run test && npm run build",
-        "deploy": "npm publish --access=public"
+        "deploy": "npm publish --access=public",
+        "postdeploy": "git push"
     },
     "nodemonConfig": {
         "ignore": [
