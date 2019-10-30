@@ -64,5 +64,3 @@ typings/
 /.bash_history
 /npm/
 /nbproject/private/
-/dist/
-/demo/react-extras-demo/nbproject/private/
