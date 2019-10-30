@@ -59,9 +59,15 @@ typings/
 
 # next.js build output
 .next
+
+# others
+
 /.config/
 /.npmrc
 /.bash_history
 /npm/
 /nbproject/private/
 /dist/
+package-lock.json
+
+
