@@ -1,40 +1,47 @@
 {
-    "name": "@ssl-lib/react-extras",
-    "version": "1.1.131",
-    "description": "",
-    "main": "dist/index.js",
-    "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",
-    "license": "MIT",
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "preinstall": "node -e \"const fs = require('fs');if(fs.existsSync('./package-lock.json')){fs.unlinkSync('./package-lock.json');}\"",
-        "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
-        "build": "babel ./src --out-dir ./dist",
-        "dev": "nodemon --exec npm run build",
-        "predeploy": "npm i",
-        "prepublish": "npm run test && npm run build",
-        "deploy": "npm publish --access=public",
-        "postdeploy": "git push"
-    },
-    "nodemonConfig": {
-        "ignore": [
-            "dist/*"
-        ]
-    },
-    "dependencies": {
-        "@ssl-lib/js-extras": "*"
-    },
-    "devDependencies": {
-        "@babel/cli": "^7.2.3",
-        "@babel/core": "^7.3.4",
-        "@babel/plugin-proposal-class-properties": "^7.3.4",
-        "@babel/plugin-transform-classes": "^7.3.4",
-        "@babel/preset-env": "^7.3.4",
-        "@babel/preset-react": "^7.0.0",
-        "fs-extra": "^7.0.1",
-        "nodemon": "^1.18.10",
-        "react-docgen": "^4.0.1"
-    }
+  "name": "@ssl-lib/react-extras",
+  "version": "1.1.131",
+  "description": "",
+  "main": "dist/index.js",
+  "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "preinstall": "node -e \"const fs = require('fs');if(fs.existsSync('./package-lock.json')){fs.unlinkSync('./package-lock.json');}\"",
+    "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
+    "build": "babel ./src --out-dir ./dist",
+    "dev": "nodemon --exec npm run build",
+    "predeploy": "npm i",
+    "prepublish": "npm run test && npm run build",
+    "deploy": "npm publish --access=public",
+    "postdeploy": "git push",
+    "eslint": "eslint ./src",
+    "eslint:watch": "nodemon -w ./src --exc npm run eslint",
+    "eslint:fix": "eslint ./src --fix"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "dist/*"
+    ]
+  },
+  "dependencies": {
+    "@ssl-lib/js-extras": "*"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-classes": "^7.5.5",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "axios": "^0.19.0",
+    "eslint": "^6.6.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.16.0",
+    "fs-extra": "^8.1.0",
+    "nodemon": "^1.19.4",
+    "react-docgen": "^4.1.1"
+  }
 }
