@@ -10,13 +10,13 @@
     - [ElseIf](#elseif)
     - [Else](#else)
     - [IfComponentProps](#ifcomponentprops)
-- [For](#for) 
+- [For](#for)
     - [ForProps](#forprops)
-- [Switch](#switch)
-    - [Case](#case)
-    - [Default](#default)
-    - [SwitchProps](#switchprops)
- 
+- [Translate](#translate)
+    - [SetLang](#setLang)
+    - [TranslateProps](#translateProps)
+
+
 ### Instalation
 
 To install this lib use the command below:
@@ -51,7 +51,7 @@ This is the first test to be realized by the IfComponent. You need to define a t
 
 ```javascript
     import { IfComponent, If, ElseIf, Else } from "@ssl-lib/react-extras";
-    
+
     const Test = () => <IfComponent>
         <If test{true}>
             <label>Test 1 pass</label>
@@ -79,13 +79,13 @@ Or like a function:
 
 ```
 
-### ElseIf 
+### ElseIf
 
 This component is similar to If, but this component never can be the first child of IfComponent.
 
 ```javascript
-    import { IfComponent, If, ElseIf, Else } from "@ssl-lib/react-extras"; 
-    
+    import { IfComponent, If, ElseIf, Else } from "@ssl-lib/react-extras";
+
     const Test = () => <IfComponent>
         <If test{false}>
             <label>Test 1 pass</label>
@@ -103,8 +103,8 @@ You can see the list of props [here](#ifcomponentprops).
 This is a Else, it is used of the same form like the else in JavaScript. This component only can be define like the last child of IfComponet. It is only default result when all tests fail.
 
 ```javascript
-    import { IfComponent, If, ElseIf, Else } from "@ssl-lib/react-extras"; 
-    
+    import { IfComponent, If, ElseIf, Else } from "@ssl-lib/react-extras";
+
     const Test = () => <IfComponent>
         <If test{false}>
             <label>Test 1 pass</label>
@@ -130,8 +130,8 @@ children       | IF\|ElseIf\|Else | Element \| Function | YES        | If it is 
 The For component work like a ForEach of the PHP, you define a list e the props name that will be insert in each child. You can define the child like child or via props, like IfComponent. See the exemple below:
 
 ```javascript
-    import { For } from "@ssl-lib/react-extras"; 
-    
+    import { For } from "@ssl-lib/react-extras";
+
     const Title = (props) => <h1>{props.text}</h1>;
     const list = [1, 2, 3, 4, 5];
     const Test = () =>  <For of={list} to="text">
@@ -142,8 +142,8 @@ The For component work like a ForEach of the PHP, you define a list e the props 
 The code above will create a list of H1 with 5 numbers. The props **to** define the props target in child component. You can define the child component like If, using a function or a component. See the exmeple below:
 
 ```javascript
-    import { For } from "@ssl-lib/react-extras";  
-    
+    import { For } from "@ssl-lib/react-extras";
+
     const Title = (props) => <h1>{props.text}</h1>;
     const list = [1, 2, 3, 4, 5];
     const Loop1 = () =>  <For of={list} to="text">
@@ -168,7 +168,7 @@ TranslateProvider is provider for Translate componente, a i18N component. Use Tr
 
 ```javascript
     import { TranslateProvider } from "@ssl-lib/react-extras";
-    
+
     const dictionary = {
         pt: {
             HI: "Oi"
@@ -177,7 +177,7 @@ TranslateProvider is provider for Translate componente, a i18N component. Use Tr
             FRIEND: "Amigo"
         }
     };
-    
+
     const App = () => <TranslateProvider language="pt-BR" errorLanguage="pt" dictionary={dictionary}>
         <div></div>
     </TranslateProvider>;
@@ -187,7 +187,7 @@ After you set the values of props, you can access the dictionary in others compo
 
 ```javascript
     import { TranslateProvider } from "@ssl-lib/react-extras";
-    
+
     const dictionary = {
         pt: {
             HI: "Oi"
@@ -196,7 +196,7 @@ After you set the values of props, you can access the dictionary in others compo
             FRIEND: "Amigo"
         }
     };
-    
+
     const App = () => <TranslateProvider errorLanguage="pt" dictionary={dictionary}>
         <div>Auto detect language</div>
     </TranslateProvider>;
@@ -208,46 +208,46 @@ The component Translate is used to access the keys of the dictionary of project.
 
 ```javascript
     import { TranslateProvider, Translate } from "@ssl-lib/react-extras";
-    
+
     const dictionary = {
         pt: {
             HI: "Oi",
             FRIEND: "Amigo"
         }
     };
-    
+
     const Text = () => <div>
         <Translate>HI</Translate>{" "}<Translate>FRIEND</Translate>
     </div>;
-    
+
     const App = () => <TranslateProvider errorLanguage="pt" dictionary={dictionary}>
         <Text />
     </TranslateProvider>;
 ```
 
-The code above render a div with the text "Oi Amigo". 
+The code above render a div with the text "Oi Amigo".
 
 The Translate allow you set a especific dictionary for your component. This allow you create isolateds componentes, with this you can export the full component for other projects. Look.
 
 ```javascript
     import { TranslateProvider, Translate } from "@ssl-lib/react-extras";
-    
+
     const dictionary = {
         pt: {
             HI: "Oi"
         }
     };
-    
+
     const dictionaryTranslate = {
         pt: {
             FRIEND: "Amigo"
         }
     };
-    
+
     const Text = () => <Translate dictionary={dictionaryTranslate}>
         {(translate) => <div>{translate("HI")}{" "}{translate("FRIEND")}</div>}
     </Translate>
-    
+
     const App = () => <TranslateProvider errorLanguage="pt" dictionary={dictionary}>
         <Text />
     </TranslateProvider>;
@@ -283,7 +283,7 @@ Using this, you can create exportables full components, and in your next project
     /**/
     import dictionary from "./dictionary";
     import "./Button.css";
-    
+
     export default ({onClick}) => <Translate dictionary={dictionary}>
         {(translate) => <button className="Button" onClick={onClick}>{translate("SAVE")}}</button>}
     </Translate>;
@@ -294,7 +294,7 @@ Using this, you can create exportables full components, and in your next project
     import React from 'react';
     import ReactDOM from 'react-dom';
     import Button from './Button';
-    
+
     it('renders without crashing', () => {
       const div = document.createElement('div');
       ReactDOM.render(<Button />, div);
@@ -323,7 +323,7 @@ This component is responsable to change the language of project. It receive a St
     /**/
     import dictionary from "./dictionary";
     import "./Button.css";
-    
+
     const set1 = () => <SetLang>pt-BR</SetLang>;
     const set2 = () => <SetLang>{(setLang) => <a onClick={() => setLang('pt-BR')}>Português</a>}</SetLang>
 ```

@@ -29,6 +29,7 @@ import { TranslateProvider, Translate, SetLang, AppendDicionary, TranslateContex
 import { Switch, Case, Default } from './Switch';
 import LifeCircleForPure from './LifeCircleForPure';
 import InjectHook from './InjectHook';
+import Axios from './Axios';
 /**/
 export {
     IfComponent, If, ElseIf, Else,
@@ -37,4 +38,5 @@ export {
     Switch, Case, Default,
     LifeCircleForPure,
     InjectHook,
+    Axios,
 };
