@@ -6,7 +6,7 @@ import axios from 'axios';
 /**
  * Componnente que realiza as requisições.
  * @description text
- * @author Sillas S. Leal<sillas.santos.leal@accenture.com>
+ * @author Sillas S. Leal<sillas.s.leal@gmail.com>
  */
 export default class Axios extends Component {
     static propTypes = {
