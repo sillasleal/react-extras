@@ -70,3 +70,6 @@ typings/
 package-lock.json
 /etc
 /yarn.lock
+.directory
+*.kate-swp
+*.swp
