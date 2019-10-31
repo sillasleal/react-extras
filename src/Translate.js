@@ -237,6 +237,7 @@ export class TranslateProvider extends Component {
       }
       /**/
       if (newWord.indexOf('{') > -1) {
+        // Para evitar LOOP INFINITO - deve verificar se a tradução atual é igual a anterior, se for, significa que não tem mais o que fazer na chave
         return this.translate(key, {
           ...dictCoringa,
           ...dictOfCoringaLang,
