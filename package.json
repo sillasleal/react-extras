@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "preinstall": "node -e \"const fs = require('fs');if(fs.existsSync('./package-lock.json')){fs.unlinkSync('./package-lock.json');}\"",
+    "preinstall": "node ./scripts/removeLock.js",
     "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
     "build": "babel ./src --out-dir ./dist",
     "dev": "nodemon --exec npm run build",
