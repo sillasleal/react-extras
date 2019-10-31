@@ -27,9 +27,9 @@ module.exports = {
     "require-jsdoc": [0, {
         "ignore":
             {
-              "render": true,
-              "constructor": true,
-              "componentDidMount": true,
+              render: true,
+              constructor: true,
+              componentDidMount: true,
               componentWillUnmount: true,
               componentDidUpdate: true
             }

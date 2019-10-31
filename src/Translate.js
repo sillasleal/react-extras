@@ -137,10 +137,12 @@ export class TranslateProvider extends Component {
    * usados para o plural
    * @param {object} personalDict Um dicionário exclusivo da execução
    * @param {String} personalLang O idioma especifico da execução
+   * @param {String} lastNewWord A ultima palavra gerada.
+   * Usada para parar a recursão
    * @return {newWord|TranslateProvider@call;translate|
    * TranslateProvider.translate.key|String}
    */
-  translate(key, params = {}, personalDict, personalLang) {
+  translate(key, params = {}, personalDict, personalLang, lastNewWord) {
     /*
      *  LÓGICA
      *  SE key é String:
@@ -151,10 +153,13 @@ export class TranslateProvider extends Component {
      *      algo como pt-*, o que englobaria 'pt, pt-BR, pt-AN e etc'
      *      e o mescla ao resultado anterior para uso no método
      *      #Verifica se o personalDict é valido, se for, o mescla com o
-     *      dicionário global e o local criado anteriormente e o usa o resultado
-     *       no método
+     *      dicionário global e o local criado anteriormente e usa o resultado
+     *      no método
      *      #Verifica se as prorpiedades de params existem no valor associado
      *      a key e substitue na string final
+     *      #Verifica se na string final existem chaves internas
+     *      #Caso exista chaves internas, tenta substituir essas chaves por
+     *      valores no dicionário local ao método
      *  CASE SE key é Array:
      *      #Trata o caso 'plural'
      *      #Verifica se o array possui três elementos
@@ -183,7 +188,7 @@ export class TranslateProvider extends Component {
       const dictionaries = Object.isObject(personalDict) ?
         Object.assignDeep(dictionary, personalDict) :
         {...dictionary};
-      const dictCoringa = Object.readProp(dictionaries, '*', {});
+      const dictAsterisk = Object.readProp(dictionaries, '*', {});
       /* Buscando a palavra nos diversos dicionários */
       if (String.isValid(language)) {
         languagesArray = [language, ...languagesArray];
@@ -192,22 +197,22 @@ export class TranslateProvider extends Component {
         languagesArray = [personalLang, ...languagesArray];
       }
       languagesArray = [...new Set(languagesArray)];
-      let langOfCoringa;
-      let dictOfCoringaLang;
-      let dictionaryOfLang;
+      let langOfAsterisk;
+      let dictAsteriskOfLang;
+      let dictOfLang;
       let word;
       for (let i = 0; i < languagesArray.length; i++) {
         if (String.isValid(languagesArray[i])) {
-          langOfCoringa = languagesArray[i].indexOf('-') > -1 ?
+          langOfAsterisk = languagesArray[i].indexOf('-') > -1 ?
             languagesArray[i].split('-')[0] :
             languagesArray[i];
-          dictOfCoringaLang = Object.readProp(
-              dictionaries, `${langOfCoringa}-*`, {});
-          dictionaryOfLang = Object.readProp(
+          dictAsteriskOfLang = Object.readProp(
+              dictionaries, `${langOfAsterisk}-*`, {});
+          dictOfLang = Object.readProp(
               dictionaries, languagesArray[i], {});
-          word = dictionaryOfLang[key] ||
-              dictOfCoringaLang[key] ||
-              dictCoringa[key];
+          word = dictOfLang[key] ||
+              dictAsteriskOfLang[key] ||
+              dictAsterisk[key];
           if (word) {
             break;
           }
@@ -228,21 +233,28 @@ export class TranslateProvider extends Component {
       if (Object.isObject(params) &&
           String.isValid(newWord) &&
           newWord.indexOf('{') > -1) {
-        for (const prop in params) {
-          if (params.hasOwnProperty(prop)) {
-            const element = params[prop];
+        // Tratando os parametros que serão inseridos na nova string
+        const keysOnWord = newWord
+            .split("}")
+            .map(i => i.substr(i.indexOf("{") + 1))
+            .filter(i => i.length);
+        for (const prop in keysOnWord) {
+          if (keysOnWord.hasOwnProperty(prop)) {
+            const element = keysOnWord[prop];
             newWord = newWord.replaceAll(`{${prop}}`, element);
           }
         }
       }
       /**/
-      if (newWord.indexOf('{') > -1) {
-        // Para evitar LOOP INFINITO - deve verificar se a tradução atual é igual a anterior, se for, significa que não tem mais o que fazer na chave
-        return this.translate(key, {
-          ...dictCoringa,
-          ...dictOfCoringaLang,
-          ...dictionaryOfLang,
-        }, personalDict, personalLang);
+      if (String.isValid(newWord) &&
+          newWord.indexOf('{') > -1 &&
+          newWord !== lastNewWord) {
+        // Apenas entra no if se a string ainda possui "{" e é diferente da anterior
+        return this.translate(newWord, {
+          ...dictAsterisk,
+          ...dictAsteriskOfLang,
+          ...dictOfLang,
+        }, personalDict, personalLang, newWord);
       } else {
         return newWord;
       }

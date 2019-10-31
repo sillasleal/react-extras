@@ -1,6 +1,6 @@
 {
   "name": "@ssl-lib/react-extras",
-  "version": "1.1.131",
+  "version": "1.1.132",
   "description": "",
   "main": "dist/index.js",
   "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",
@@ -13,6 +13,7 @@
     "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
     "build": "babel ./src --out-dir ./dist",
     "dev": "nodemon --exec npm run build",
+    "test": "echo 'Testes desativados'",
     "predeploy": "npm i",
     "prepublish": "npm run eslint && npm run test && npm run build",
     "deploy": "npm publish --access=public",
