@@ -32,7 +32,7 @@ import ComponentBase from './ComponentBase';
  */
 export class Switch extends Component {
   render() {
-//    const {children, value} = this.props;
+    // const {children, value} = this.props;
     /**/
 
     return null;

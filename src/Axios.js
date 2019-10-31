@@ -112,20 +112,20 @@ export default class Axios extends Component {
             success = await this.props.instance[method](
                 `${reqUrl}/${config.inRoute}`,
                 data,
-                requestConfigs
+                requestConfigs,
             );
           } else {
             success = await this.props.instance[method](
                 reqUrl,
                 data,
-                requestConfigs
+                requestConfigs,
             );
           }
         } else {
           if (config.inRoute) {
             success = await this.props.instance[method](
                 `${reqUrl}/${config.inRoute}`,
-                requestConfigs
+                requestConfigs,
             );
           } else {
             success = await this.props.instance[method](reqUrl, requestConfigs);

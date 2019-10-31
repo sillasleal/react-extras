@@ -235,9 +235,9 @@ export class TranslateProvider extends Component {
           newWord.indexOf('{') > -1) {
         // Tratando os parametros que serão inseridos na nova string
         const keysOnWord = newWord
-            .split("}")
-            .map(i => i.substr(i.indexOf("{") + 1))
-            .filter(i => i.length);
+            .split('}')
+            .map((i) => i.substr(i.indexOf('{') + 1))
+            .filter((i) => i.length);
         for (const prop in keysOnWord) {
           if (keysOnWord.hasOwnProperty(prop)) {
             const element = keysOnWord[prop];
@@ -249,7 +249,8 @@ export class TranslateProvider extends Component {
       if (String.isValid(newWord) &&
           newWord.indexOf('{') > -1 &&
           newWord !== lastNewWord) {
-        // Apenas entra no if se a string ainda possui "{" e é diferente da anterior
+        // Apenas entra no if se a string ainda possui "{"
+        // e é diferente da anterior
         return this.translate(newWord, {
           ...dictAsterisk,
           ...dictAsteriskOfLang,
@@ -265,7 +266,7 @@ export class TranslateProvider extends Component {
         console.error('The parameter array "key" need to have 3 elements: ' +
             '0 => "plural key", ' +
             '1 => "singular key", ' +
-            '2 => "parameter of count"'
+            '2 => "parameter of count"',
         );
         return '';
       }

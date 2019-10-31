@@ -5,6 +5,7 @@ import React from 'react';
  * Component ForEach
  * @description text
  * @author Sillas S. Leal<sillas.santos.leal@accenture.com>
+ * @return {Component|Array} Retorna um Component ou um array deles
  */
 export default ({list, children, each = 'children'}) => {
   if (typeof list === 'object') {
@@ -16,11 +17,11 @@ export default ({list, children, each = 'children'}) => {
         const props = children.props;
         if (each === 'children') {
           return list.map((item, key) =>
-            <Cpm {...props} key={key}>{item}</Cpm>
+            <Cpm {...props} key={key}>{item}</Cpm>,
           );
         } else {
           return list.map((item, key) =>
-            <Cpm {...props} key={key} {...{[each]: item}} />
+            <Cpm {...props} key={key} {...{[each]: item}} />,
           );
         }
       }
@@ -33,11 +34,11 @@ export default ({list, children, each = 'children'}) => {
         const props = children.props;
         if (each === 'children') {
           return keys.map((item, key) =>
-            <Cpm {...props} key={key}>{list[item]}</Cpm>
+            <Cpm {...props} key={key}>{list[item]}</Cpm>,
           );
         } else {
           return keys.map((item, key) =>
-            <Cpm {...props} key={key} {...{[each]: list[item]}} />
+            <Cpm {...props} key={key} {...{[each]: list[item]}} />,
           );
         }
       }
