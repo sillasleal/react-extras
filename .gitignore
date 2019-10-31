@@ -68,8 +68,5 @@ typings/
 /nbproject/private/
 /dist/
 package-lock.json
-
-
-
-
+/etc
 /yarn.lock

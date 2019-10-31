@@ -22,21 +22,33 @@
  * THE SOFTWARE.
  */
 
-import "@ssl-lib/js-extras";
-import { IfComponent, If, ElseIf, Else } from './IfComponent';
+import '@ssl-lib/js-extras';
+import {IfComponent, If, ElseIf, Else} from './IfComponent';
 import ForEach from './ForEach';
-import { TranslateProvider, Translate, SetLang, AppendDicionary, TranslateContext, InjectTranslate } from './Translate';
-import { Switch, Case, Default } from './Switch';
+import {
+  TranslateProvider,
+  Translate,
+  SetLang,
+  AppendDicionary,
+  TranslateContext,
+  InjectTranslate,
+} from './Translate';
+import {Switch, Case, Default} from './Switch';
 import LifeCircleForPure from './LifeCircleForPure';
 import InjectHook from './InjectHook';
 import Axios from './Axios';
 /**/
 export {
-    IfComponent, If, ElseIf, Else,
-    ForEach,
-    TranslateProvider, Translate, SetLang, AppendDicionary, TranslateContext, InjectTranslate,
-    Switch, Case, Default,
-    LifeCircleForPure,
-    InjectHook,
-    Axios,
+  IfComponent, If, ElseIf, Else,
+  ForEach,
+  TranslateProvider,
+  Translate,
+  SetLang,
+  AppendDicionary,
+  TranslateContext,
+  InjectTranslate,
+  Switch, Case, Default,
+  LifeCircleForPure,
+  InjectHook,
+  Axios,
 };

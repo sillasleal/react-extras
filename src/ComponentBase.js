@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 sillas.
@@ -24,11 +24,11 @@
 import {Component} from 'react';
 
 export default class ComponentBase extends Component {
-    render() {
-        if (typeof this.props.children === 'function') {
-            return this.props.children();
-        } else {
-            return this.props.children;
-        }
+  render() {
+    if (typeof this.props.children === 'function') {
+      return this.props.children();
+    } else {
+      return this.props.children;
     }
+  }
 }

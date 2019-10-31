@@ -14,11 +14,11 @@
     "build": "babel ./src --out-dir ./dist",
     "dev": "nodemon --exec npm run build",
     "predeploy": "npm i",
-    "prepublish": "npm run test && npm run build",
+    "prepublish": "npm run eslint && npm run test && npm run build",
     "deploy": "npm publish --access=public",
-    "postdeploy": "git push",
+    "postdeploy": "git add . && git commit && git push",
     "eslint": "eslint ./src",
-    "eslint:watch": "nodemon -w ./src --exc npm run eslint",
+    "eslint:watch": "nodemon -w ./src --exec npm run eslint",
     "eslint:fix": "eslint ./src --fix"
   },
   "nodemonConfig": {
@@ -37,6 +37,7 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
     "axios": "^0.19.0",
+    "babel-eslint": "^10.0.3",
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.16.0",

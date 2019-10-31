@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2018 Sillas S. Leal<sillas.s.leal@gmail.com>.
@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-import { Component, isValidElement } from "react";
+import {Component, isValidElement} from 'react';
 /**/
 import ComponentBase from './ComponentBase';
 
@@ -31,55 +31,22 @@ import ComponentBase from './ComponentBase';
  * @author Sillas S. Leal<sillas.s.leal@gmail.com>
  */
 export class Switch extends Component {
-    render() {
-        const {children, value} = this.props;
-        /**/
-        if (isValidElement(children)) {
-            if (children.props.value === value || children.props.name === 'default') {
-                return children;
-            }
-        } else if (Array.isArray(children)) {
-            let multReturn = [];
-            for (var item in children) {
-                if (Number(item) !== 0 && children[item].props.name === 'if') {
-                    throw new Error("If have to be the first children in IfComponent");
-                }
-                if (Number(item) === 0 && children[item].props.name === 'default') {
-                    throw new Error("The first children of IfComponent have to be a Case");
-                }
-                if (children[item].props.value === value) {
-                    multReturn.push(children[item]);
-                    if (children[item].props.break) {
-                        break;
-                    }
-                }
-            }
-            /**/
-            if (!multReturn.length) {
-                const lastChild = children[children.length - 1];
-                if (lastChild && lastChild.props.name === 'default') {
-                    return lastChild;
-                } else {
-                    return null;
-                }
-            } else {
-                return multReturn;
-            }
-        } else {
-            return null;
-        }
-        return null;
-    }
+  render() {
+//    const {children, value} = this.props;
+    /**/
+
+    return null;
+  }
 }
 
 export class Case extends ComponentBase {
     static defaultProps = {
-        name: 'case'
+      name: 'case',
     }
 }
 
 export class Default extends ComponentBase {
     static defaultProps = {
-        name: 'default'
+      name: 'default',
     }
 }

@@ -9,47 +9,51 @@ import ComponentBase from './ComponentBase';
  * @param {Array} args
  */
 export class IfComponent extends Component {
-    render() {
-        const {children, test} = this.props;
-        /**/
-        if (isValidElement(children)) {
-            if (children.props.test && children.props.name === 'if') {
-                return children;
-            }
-        } else if (Array.isArray(children)) {
-            for (var item in children) {
-                if (Number(item) !== 0 && children[item].props.name === 'if') {
-                    throw new Error("If have to be the first children in IfComponent");
-                }
-                if ((Number(item) === 0 && children[item].props.name === 'elseif') ||
-                        (Number(item) === 0 && children[item].props.name === 'else')) {
-                    throw new Error("The first children of IfComponent have to be a If");
-                }
-                if (children[item].props.test || children[item].props.name === 'else') {
-                    return children[item];
-                }
-            }
-        } else {
-            return null;
+  render() {
+    const {children, test} = this.props;
+    /**/
+    if (isValidElement(children)) {
+      if (children.props.test && children.props.name === 'if') {
+        return children;
+      }
+    } else if (Array.isArray(children)) {
+      for (const item in children) {
+        if (children.hasOwnProperty(item)) {
+          const element = children[item];
+          if (Number(item) !== 0 && element.props.name === 'if') {
+            throw new Error('If have to be the first children in IfComponent');
+          }
+          if ((Number(item) === 0 && element.props.name === 'elseif') ||
+              (Number(item) === 0 && element.props.name === 'else')) {
+            throw new Error('The first children of IfComponent' +
+                ' have to be a If');
+          }
+          if (element.props.test || element.props.name === 'else') {
+            return element;
+          }
         }
-        return null;
+      }
+    } else {
+      return null;
     }
+    return null;
+  }
 };
 
 export class If extends ComponentBase {
     static defaultProps = {
-        name: 'if'
+      name: 'if',
     }
 };
 
 export class ElseIf extends ComponentBase {
     static defaultProps = {
-        name: 'elseif'
+      name: 'elseif',
     }
 };
 
 export class Else extends ComponentBase {
     static defaultProps = {
-        name: 'else'
+      name: 'else',
     }
 };
