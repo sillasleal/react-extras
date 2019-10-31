@@ -232,6 +232,7 @@ export class TranslateProvider extends Component {
       /**/
       if (Object.isObject(params) &&
           String.isValid(newWord) &&
+          Object.keys(params).length &&
           newWord.indexOf('{') > -1) {
         // Tratando os parametros que serão inseridos na nova string
         const keysOnWord = newWord
@@ -241,7 +242,8 @@ export class TranslateProvider extends Component {
         for (const prop in keysOnWord) {
           if (keysOnWord.hasOwnProperty(prop)) {
             const element = keysOnWord[prop];
-            newWord = newWord.replaceAll(`{${prop}}`, element);
+            const wordFromDict = params[element] || `{${element}}`;
+            newWord = newWord.replaceAll(`{${element}}`, wordFromDict);
           }
         }
       }
@@ -251,11 +253,12 @@ export class TranslateProvider extends Component {
           newWord !== lastNewWord) {
         // Apenas entra no if se a string ainda possui "{"
         // e é diferente da anterior
-        return this.translate(newWord, {
+        return this.translate(`${newWord}`, {
           ...dictAsterisk,
           ...dictAsteriskOfLang,
           ...dictOfLang,
-        }, personalDict, personalLang, newWord);
+          ...params,
+        }, personalDict, personalLang, `${newWord}`);
       } else {
         return newWord;
       }
