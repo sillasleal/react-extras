@@ -37,6 +37,7 @@ import {Switch, Case, Default} from './Switch';
 import LifeCircleForPure from './LifeCircleForPure';
 import InjectHook from './InjectHook';
 import Axios from './Axios';
+import ObjectReadProp from './ObjectReadProp';
 /**/
 export {
   IfComponent, If, ElseIf, Else,
@@ -51,4 +52,5 @@ export {
   LifeCircleForPure,
   InjectHook,
   Axios,
+  ObjectReadProp,
 };

@@ -13,22 +13,22 @@ export class IfComponent extends Component {
     const {children, test} = this.props;
     /**/
     if (isValidElement(children)) {
-      if (children.props.test && children.props.name === 'if') {
+      if (children.props.test && children.type.name === 'If') {
         return children;
       }
     } else if (Array.isArray(children)) {
       for (const item in children) {
         if (children.hasOwnProperty(item)) {
           const element = children[item];
-          if (Number(item) !== 0 && element.props.name === 'if') {
+          if (Number(item) !== 0 && element.type.name === 'If') {
             throw new Error('If have to be the first children in IfComponent');
           }
-          if ((Number(item) === 0 && element.props.name === 'elseif') ||
-              (Number(item) === 0 && element.props.name === 'else')) {
+          if ((Number(item) === 0 && element.type.name === 'ElseIf') ||
+              (Number(item) === 0 && element.type.name === 'Else')) {
             throw new Error('The first children of IfComponent' +
                 ' have to be a If');
           }
-          if (element.props.test || element.props.name === 'else') {
+          if (element.props.test || element.type.name === 'Else') {
             return element;
           }
         }
@@ -40,20 +40,8 @@ export class IfComponent extends Component {
   }
 };
 
-export class If extends ComponentBase {
-    static defaultProps = {
-      name: 'if',
-    }
-};
+export class If extends ComponentBase {};
 
-export class ElseIf extends ComponentBase {
-    static defaultProps = {
-      name: 'elseif',
-    }
-};
+export class ElseIf extends ComponentBase {};
 
-export class Else extends ComponentBase {
-    static defaultProps = {
-      name: 'else',
-    }
-};
+export class Else extends ComponentBase {};

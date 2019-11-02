@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2019 sillas.
+ * Copyright 2018 Sillas S. Leal<sillas.s.leal@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {Component} from 'react';
 
-export default class ComponentBase extends Component {
-  render() {
-    const {children} = this.props;
+import React from 'react';
 
-    if (typeof children === 'function') {
-      return children();
-    } else {
-      const cpm = () => children;
-      /**/
-      return cpm();
-    }
+/**
+ * Função que injeta as props devidamente validadas
+ * @param {object} p Props passadas para o componente
+ * @return {Component} Retorna o componente filho com as devidas props
+ */
+export default (p) => {
+  const newProps = Object.keys(p)
+      .filter((i) => i !== 'children')
+      .reduce((ac, c) => ({
+        ...ac,
+        [c]: Object.readProp(p[c][0], p[c][1], P[c][2]),
+      }), {});
+  const {children} = p;
+  if (typeof children === 'function') {
+    return children(newProps);
+  } else {
+    const {type: Cpn, props} = children;
+    return <Cpn {...props} {...newProps} />;
   }
-}
+  /**/
+};
