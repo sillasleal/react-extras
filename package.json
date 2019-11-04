@@ -1,6 +1,6 @@
 {
   "name": "@ssl-lib/react-extras",
-  "version": "1.1.135",
+  "version": "1.1.136",
   "description": "",
   "main": "dist/index.js",
   "author": "Sillas S. Leal <sillas.s.leal@gmail.com>",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "preinstall": "node ./scripts/removeLock.js",
+    "preinstall": "node -e \"const fs = require('fs');if(fs.existsSync('./package-lock.json')){fs.unlinkSync('./package-lock.json');}\"",
     "prebuild": "node -e \"const fs = require('fs-extra');fs.removeSync('./dist');\"",
     "build": "babel ./src --out-dir ./dist",
     "dev": "nodemon --exec npm run build",
