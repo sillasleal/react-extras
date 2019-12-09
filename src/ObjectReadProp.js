@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 
+import '@ssl-lib/js-extras';
 import React from 'react';
 
 /**
@@ -41,6 +42,7 @@ export default (p) => {
     return children(newProps);
   } else {
     const {type: Cpn, props} = children;
+    /**/
     return <Cpn {...props} {...newProps} />;
   }
   /**/
