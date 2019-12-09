@@ -87,6 +87,10 @@ export default class Axios extends Component {
       }
     }
 
+    /**
+     * Método que realiza o submit
+     * @param {Object} props As props a serem usadas na requisição
+     */
     async submit(props) {
       const {
         url, data, method, config,

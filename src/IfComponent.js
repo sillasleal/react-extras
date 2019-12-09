@@ -1,6 +1,5 @@
 import {Component, isValidElement} from 'react';
 /**/
-import ComponentBase from './ComponentBase';
 
 /**
  * Description of IfComponent
@@ -37,20 +36,32 @@ export const IfComponent = ({children}) => {
   return null;
 };
 
-export class If extends ComponentBase {
-    static defaultProps = {
-      name: 'if',
-    }
+export class If extends Component {
+  static defaultProps = {
+    name: 'if',
+  }
+
+  render() {
+    return null;
+  }
 };
 
-export class ElseIf extends ComponentBase {
-    static defaultProps = {
-      name: 'elseif',
-    }
+export class ElseIf extends Component {
+  static defaultProps = {
+    name: 'elseif',
+  }
+
+  render() {
+    return null;
+  }
 };
 
-export class Else extends ComponentBase {
-    static defaultProps = {
-      name: 'else',
-    }
+export class Else extends Component {
+  static defaultProps = {
+    name: 'else',
+  }
+
+  render() {
+    return null;
+  }
 };
